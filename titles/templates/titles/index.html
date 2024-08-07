@@ -1,0 +1,6 @@
+<h1>Latest Strava Titles</h1>
+<ol>
+  {% for strava_title in latest_strava_title_list %}
+   <li>{{ strava_title.title }} by {{ strava_title.user_id }} on {{ strava_title.start_time|date:"Y-m-d" }}</li>
+  {% endfor %}
+</ol>
