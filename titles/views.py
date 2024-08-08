@@ -1,16 +1,20 @@
-from django.db.models import F
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+import logging
+
+from django.http import JsonResponse
+import hashlib
+import hmac
+import json
+
+from django.http import JsonResponse
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
-import json
-import hmac
-import hashlib
 
-from .models import Choice, Question, Title
+from .models import Question, Title
 
 STRAVA_CLIENT_SECRET = "your_strava_client_secret"
+
+# Your verify token. Should be a random string.
+VERIFY_TOKEN = "STRAVA"
 
 
 class IndexView(generic.ListView):
@@ -32,29 +36,6 @@ class ResultsView(generic.DetailView):
     template_name = "titles/results.html"
 
 
-def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    try:
-        selected_choice = question.choice_set.get(pk=request.POST["choice"])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        return render(
-            request,
-            "titles/detail.html",
-            {
-                "question": question,
-                "error_message": "You didn't select a choice.",
-            },
-        )
-    else:
-        selected_choice.votes = F("votes") + 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse("titles:results", args=(question.id,)))
-
-
 @csrf_exempt
 def strava_webhook(request):
     if request.method == "GET":
@@ -63,7 +44,8 @@ def strava_webhook(request):
         hub_challenge = request.GET.get("hub.challenge")
         hub_verify_token = request.GET.get("hub.verify_token")
 
-        if hub_mode == "subscribe" and hub_verify_token == "your_verify_token":
+        if hub_mode == "subscribe" and hub_verify_token == VERIFY_TOKEN:
+            logging.info("WEBHOOK_VERIFIED")
             return JsonResponse({"hub.challenge": hub_challenge})
         else:
             return JsonResponse(status=403, data={"error": "Verification failed"})

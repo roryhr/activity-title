@@ -1,14 +1,25 @@
-<form action="{% url 'titles:vote' question.id %}" method="post">
-    {% csrf_token %}
-    <fieldset>
-        <legend>
-            <h1>{{ question.question_text }}</h1>
-        </legend>
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        {% for choice in question.choice_set.all %}
-        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
-        <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+<!-- templates/titles/detail.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title.title }}</title>
+</head>
+<body>
+    <h1>{{ title.title }}</h1>
+    <p>Created at: {{ title.created_at }}</p>
+    <p>Last updated: {{ title.updated_at }}</p>
+
+    <h2>Related Activities:</h2>
+    <ul>
+        {% for activity in title.activity_set.all %}
+            <li>{{ activity.activity_id }}</li>
+        {% empty %}
+            <li>No related activities found.</li>
         {% endfor %}
-    </fieldset>
-    <input type="submit" value="Vote">
-</form>
+    </ul>
+
+    <a href="{% url 'titles:index' %}">Back to the list</a>
+</body>
+</html>

@@ -1,6 +1,22 @@
-<h1>Latest Strava Titles</h1>
-<ol>
-  {% for strava_title in latest_strava_title_list %}
-   <li>{{ strava_title.title }} by {{ strava_title.user_id }} on {{ strava_title.start_time|date:"Y-m-d" }}</li>
-  {% endfor %}
-</ol>
+<!-- templates/titles/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title List</title>
+</head>
+<body>
+    <h1>List of Titles</h1>
+    <ul>
+        {% for title in latest_strava_title_list %}
+            <li>
+                <a href="{% url 'titles:detail' title.id %}">{{ title.title }}</a>
+                <p>Created at: {{ title.created_at }}</p>
+            </li>
+        {% empty %}
+            <li>No titles are available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
