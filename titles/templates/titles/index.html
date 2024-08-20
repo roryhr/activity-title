@@ -1,10 +1,9 @@
 <!-- templates/titles/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title List</title>
+    <title>Strava Deck</title>
 </head>
 <body>
     <h1>List of Titles</h1>
@@ -18,5 +17,13 @@
             <li>No titles are available.</li>
         {% endfor %}
     </ul>
+
+    <!-- Strava Login Button -->
+    <h2>Login with Strava</h2>
+    <p>Connect to Strava to allow Deck to update your activities. Requests activity:read_all and activity:write</p>
+    <a href="{% url 'titles:strava_login' %}">
+        {% load static %}
+        <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava">
+    </a>
 </body>
 </html>
