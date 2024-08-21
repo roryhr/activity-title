@@ -10,10 +10,7 @@ from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Title, ShortLivedAccessToken, RefreshToken
-
-# Your verify token. Should be a random string.
-VERIFY_TOKEN = "STRAVA"
+from .models import Title, Token
 
 
 class IndexView(generic.ListView):
@@ -39,7 +36,7 @@ def strava_webhook(request):
         hub_challenge = request.GET.get("hub.challenge")
         hub_verify_token = request.GET.get("hub.verify_token")
 
-        if hub_mode == "subscribe" and hub_verify_token == VERIFY_TOKEN:
+        if hub_mode == "subscribe" and hub_verify_token == settings.VERIFY_TOKEN:
             logging.info("WEBHOOK_VERIFIED")
             return JsonResponse({"hub.challenge": hub_challenge})
         else:
@@ -71,6 +68,7 @@ def strava_webhook(request):
 
 
 def strava_login(request):
+    """Connect with Strava button"""
     redirect_uri = request.build_absolute_uri("/strava/callback")
     params = {
         "client_id": settings.STRAVA_CLIENT_ID,
@@ -88,12 +86,12 @@ def strava_login(request):
 
 
 def strava_callback(request):
-    # Get the authorization code from the request
+    """Get the authorization code from the request"""
     code = request.GET.get("code")
 
     # Exchange the authorization code for an access token
     response = requests.post(
-        "https://www.strava.com/oauth/token",
+        url="https://www.strava.com/oauth/token",
         data={
             "client_id": settings.STRAVA_CLIENT_ID,
             "client_secret": settings.STRAVA_CLIENT_SECRET,
@@ -105,34 +103,22 @@ def strava_callback(request):
     # Check if the request was successful
     if response.status_code == 200:
         token_data = response.json()
-
         athlete_id = token_data["athlete"]["id"]
         access_token = token_data["access_token"]
         refresh_token = token_data["refresh_token"]
         expires_at = timezone.datetime.fromtimestamp(token_data["expires_at"])
-        scope = "read" in token_data["scope"]
 
         # Save or update the ShortLivedAccessToken
-        ShortLivedAccessToken.objects.update_or_create(
+        Token.objects.update_or_create(
             athlete_id=athlete_id,
-            defaults={
-                "scope": scope,
-                "access_token_code": access_token,
-                "expires_at": expires_at,
-            },
+            access_token=access_token,
+            refresh_token=refresh_token,
+            expires_at=expires_at,
         )
 
-        # Save or update the RefreshToken
-        RefreshToken.objects.update_or_create(
-            athlete_id=athlete_id,
-            defaults={
-                "refresh_token_code": refresh_token,
-                "scope": scope,
-            },
-        )
-
-        # Redirect to a success page or wherever you want the user to go next
-        return redirect("success_view_name")
+        print("SUCCESS!!?")
+        return redirect("/")
     else:
+        print("NO success. womp womp")
         # Handle error in OAuth process
-        return redirect("error_view_name")
+        return redirect("/")

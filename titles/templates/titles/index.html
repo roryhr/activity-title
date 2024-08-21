@@ -20,10 +20,14 @@
 
     <!-- Strava Login Button -->
     <h2>Login with Strava</h2>
-    <p>Connect to Strava to allow Deck to update your activities. Requests activity:read_all and activity:write</p>
+    <p>Connect to Strava to allow Deck to update your activities. Requests activity:read_all and activity:write
+
+        We are not affiliated with Strava.
+    </p>
     <a href="{% url 'titles:strava_login' %}">
         {% load static %}
         <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava">
     </a>
+    <p>We are not affiliated with Strava.</p>
 </body>
 </html>

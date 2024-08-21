@@ -1,9 +1,11 @@
 import datetime
+import logging
 
 import requests
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
+
+from titler import settings
 
 
 class Question(models.Model):
@@ -36,17 +38,15 @@ class Activity(models.Model):
 
 
 class Token(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE
-    )  # If you want to associate the token with a user
+    """Bearer token for API auth"""
+
+    athlete_id = models.IntegerField(db_index=True)
     access_token = models.CharField(max_length=255)
     refresh_token = models.CharField(max_length=255)
     expires_at = models.DateTimeField()  # When the access token expires
-    token_type = models.CharField(max_length=50, default="Bearer")  # Usually "Bearer"
-    scope = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} - Token"
+        return f"{self.athlete_id} - Token"
 
     def is_expired(self):
         """Check if the token is expired."""
@@ -54,25 +54,27 @@ class Token(models.Model):
 
     def refresh(self):
         """Refresh the access token using the refresh token."""
-        if self.is_expired():
-            # Make the request to refresh the token
-            data = {
-                "client_id": "YOUR_CLIENT_ID",
-                "client_secret": "YOUR_CLIENT_SECRET",
-                "grant_type": "refresh_token",
-                "refresh_token": self.refresh_token,
-            }
-            response = requests.post("https://www.strava.com/oauth/token", data=data)
-            if response.status_code == 200:
-                token_data = response.json()
-                self.access_token = token_data["access_token"]
-                self.refresh_token = token_data.get("refresh_token", self.refresh_token)
-                self.expires_at = timezone.now() + timezone.timedelta(
-                    seconds=token_data["expires_in"]
-                )
-                self.save()
-            else:
-                raise Exception("Failed to refresh token")
+        if not self.is_expired():
+            logging.info("TOKEN GOOD")
+            return None
+
+        # Make the request to refresh the token
+        data = {
+            "client_id": settings.STRAVA_CLIENT_ID,
+            "client_secret": settings.STRAVA_CLIENT_SECRET,
+            "grant_type": "refresh_token",
+            "refresh_token": self.refresh_token,
+        }
+        response = requests.post("https://www.strava.com/oauth/token", data=data)
+
+        if response.status_code == 200:
+            token_data = response.json()
+            self.access_token = token_data["access_token"]
+            self.refresh_token = token_data.get("refresh_token", self.refresh_token)
+            self.expires_at = timezone.now() + timezone.timedelta(
+                seconds=token_data["expires_in"]
+            )
+            self.save()
 
     def save(self, *args, **kwargs):
         """Override save method to ensure that expires_at is in UTC."""
@@ -104,3 +106,7 @@ class ShortLivedAccessToken(models.Model):
 
     def __str__(self):
         return f"Athlete {self.athlete_id} - Access Token"
+
+    def is_expired(self):
+        """Check if the token is expired."""
+        return timezone.now() >= self.expires_at
