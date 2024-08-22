@@ -1,5 +1,7 @@
-from django.test import TestCase
-from django.contrib.auth.models import User
+import json
+
+from django.test import TestCase, Client
+from django.urls import reverse
 from django.utils import timezone
 
 from titles.models import Token
@@ -27,3 +29,29 @@ class TokenTest(TestCase):
         self.token.save()
 
         self.assertTrue(self.token.is_expired())
+
+
+class WebhookTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.webhook_url = reverse("titles:strava_webhook")
+
+    def test_webhook_update_event(self):
+        # Data to be sent in the POST request
+        payload = {
+            "aspect_type": "update",
+            "event_time": 1549560669,
+            "object_id": 1234567890,
+            "object_type": "activity",
+            "owner_id": 9999999,
+            "subscription_id": 999999,
+        }
+
+        # Perform the POST request
+        response = self.client.post(
+            self.webhook_url, data=json.dumps(payload), content_type="application/json"
+        )
+
+        # Check the response status code and content
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(response.content, {"status": "Event received"})

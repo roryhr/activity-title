@@ -27,3 +27,16 @@ fi
 ## Delete a subscription
 #curl -vX DELETE \
 #"https://www.strava.com/api/v3/push_subscriptions/$STRAVA_CLIENT_ID?client_id=$STRAVA_CLIENT_ID&client_secret=$STRAVA_CLIENT_SECRET"
+
+
+# Test the webhook
+curl -X POST http://127.0.0.1:8000/webhook \
+-H 'Content-Type: application/json' \
+-d '{
+    "aspect_type": "update",
+    "event_time": 1549560669,
+    "object_id": 1234567890,
+    "object_type": "activity",
+    "owner_id": 9999999,
+    "subscription_id": 999999
+  }'

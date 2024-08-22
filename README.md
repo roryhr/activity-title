@@ -8,6 +8,6 @@ That's it!
 
 ```
 Python 3.11
-Django 5.0.7.
+Django 5.0.7
 ```
 

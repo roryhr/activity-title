@@ -1,0 +1,104 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+main {
+    padding: 1rem;
+}
+
+h1 {
+    margin: 0;
+}
+
+.messages {
+    margin-bottom: 1rem;
+}
+
+.message {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.message.info {
+    background-color: #d9edf7;
+    color: #31708f;
+}
+
+.message.error {
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+.titles {
+    margin-bottom: 2rem;
+}
+
+.titles ul {
+    list-style: none;
+    padding: 0;
+}
+
+.titles li {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.title-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.title-link:hover {
+    text-decoration: underline;
+}
+
+.created-at {
+    color: #666;
+}
+
+.strava-login {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.strava-button img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.affiliation-note {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}

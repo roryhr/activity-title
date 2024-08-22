@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("titles", "0004_refreshtoken_shortlivedaccesstoken_delete_choice"),
     ]

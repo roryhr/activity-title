@@ -1,7 +1,8 @@
 import requests
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
-from titles.models import Token
+from titles.models import Token, Title
 
 
 def get_token():
@@ -12,24 +13,18 @@ def get_token():
         return access_token_record.access_token
 
 
-def update_activity(id, new_name):
+def update_activity(id):
+    t = Title.objects.filter(used_at__isnull=True).order_by("-created_at").first()
 
-    headers = {"Authorization": f"Bearer {get_token()}"}
-
-    # Data to be updated
-    data = {"name": new_name}
-
-    # Make the PUT request to update the activity name
     response = requests.put(
         url=f"https://www.strava.com/api/v3/activities/{id}",
-        headers=headers,
-        data=data,
+        headers={"Authorization": f"Bearer {get_token()}"},
+        data={"name": t.title},
     )
 
-    # Check if the request was successful
     if response.status_code == 200:
         print("Activity name updated successfully!")
-
+        t.used_at = timezone.now()
     print(response.json())
 
 

@@ -4,6 +4,7 @@ from urllib.parse import urlencode, urlunparse
 
 import requests
 from django.conf import settings
+from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils import timezone
@@ -11,6 +12,7 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Title, Token
+from .strava import update_activity
 
 
 class IndexView(generic.ListView):
@@ -43,26 +45,25 @@ def strava_webhook(request):
             return JsonResponse(status=403, data={"error": "Verification failed"})
 
     elif request.method == "POST":
-        print("POST HANDLING")
         event_data = json.loads(request.body)
-        print(event_data)
         event_type = event_data.get("aspect_type")
         object_type = event_data.get("object_type")
         activity_id = event_data["object_id"]
+
+        print(f"Received event: {event_type}")
+        messages.info(request, f"Received event: {event_type}")
+
         # Handle the event based on its type
         if object_type == "activity":
             if event_type == "create":
-                # Handle new activity
-                pass
+                update_activity(id=activity_id)
             elif event_type == "update":
                 # Handle activity update
                 pass
             elif event_type == "delete":
                 # Handle activity deletion
                 pass
-
         return JsonResponse(status=200, data={"status": "Event received"})
-
     else:
         return JsonResponse(status=405, data={"error": "Method not allowed"})
 
@@ -89,7 +90,6 @@ def strava_callback(request):
     """Get the authorization code from the request"""
     code = request.GET.get("code")
 
-    # Exchange the authorization code for an access token
     response = requests.post(
         url="https://www.strava.com/oauth/token",
         data={
@@ -100,7 +100,6 @@ def strava_callback(request):
         },
     )
 
-    # Check if the request was successful
     if response.status_code == 200:
         token_data = response.json()
         athlete_id = token_data["athlete"]["id"]
@@ -116,9 +115,9 @@ def strava_callback(request):
             expires_at=expires_at,
         )
 
-        print("SUCCESS!!?")
-        return redirect("/")
+        print("SUCCESS!")
+        return redirect("titles:index")
     else:
         print("NO success. womp womp")
         # Handle error in OAuth process
-        return redirect("/")
+        return redirect("titles:index")

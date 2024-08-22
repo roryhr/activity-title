@@ -21,9 +21,9 @@ class Question(models.Model):
 
 class Title(models.Model):
     title = models.CharField(max_length=255)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    used_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -31,7 +31,6 @@ class Title(models.Model):
 
 class Activity(models.Model):
     title = models.ForeignKey(Title, on_delete=models.CASCADE)
-
     activity_id = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -83,30 +82,3 @@ class Token(models.Model):
                 self.expires_at, timezone.timezone.utc
             )
         super().save(*args, **kwargs)
-
-
-class RefreshToken(models.Model):
-    athlete_id = models.IntegerField(db_index=True)  # Indexing athlete ID
-    refresh_token_code = models.CharField(
-        max_length=255, db_index=True
-    )  # Indexing refresh token code
-    scope = models.BooleanField()  # Store as a boolean
-
-    def __str__(self):
-        return f"Athlete {self.athlete_id} - Refresh Token"
-
-
-class ShortLivedAccessToken(models.Model):
-    athlete_id = models.IntegerField(db_index=True)  # Indexing athlete ID
-    scope = models.BooleanField()  # Store as a boolean
-    access_token_code = models.CharField(
-        max_length=255, db_index=True
-    )  # Indexing access token
-    expires_at = models.DateTimeField(db_index=True)  # Indexing expiration timestamp
-
-    def __str__(self):
-        return f"Athlete {self.athlete_id} - Access Token"
-
-    def is_expired(self):
-        """Check if the token is expired."""
-        return timezone.now() >= self.expires_at

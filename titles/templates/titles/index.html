@@ -1,33 +1,55 @@
-<!-- templates/titles/index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strava Deck</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
+
 <body>
-    <h1>List of Titles</h1>
-    <ul>
-        {% for title in latest_strava_title_list %}
-            <li>
-                <a href="{% url 'titles:detail' title.id %}">{{ title.title }}</a>
-                <p>Created at: {{ title.created_at }}</p>
-            </li>
-        {% empty %}
-            <li>No titles are available.</li>
-        {% endfor %}
-    </ul>
+    <header>
+        <h1>Strava Deck</h1>
+    </header>
+    <main>
 
-    <!-- Strava Login Button -->
-    <h2>Login with Strava</h2>
-    <p>Connect to Strava to allow Deck to update your activities. Requests activity:read_all and activity:write
+        {% if messages %}
+        <section class="messages">
+            <ul>
+                {% for message in messages %}
+                <li class="message {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
 
-        We are not affiliated with Strava.
-    </p>
-    <a href="{% url 'titles:strava_login' %}">
-        {% load static %}
-        <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava">
-    </a>
-    <p>We are not affiliated with Strava.</p>
+        <section class="titles">
+            <h2>List of Titles</h2>
+            <ul>
+                {% for title in latest_strava_title_list %}
+                <li>
+                    <a href="{% url 'titles:detail' title.id %}" class="title-link">{{ title.title }}</a>
+                    <p class="created-at">Created at: {{ title.created_at }}</p>
+                </li>
+                {% empty %}
+                <li>No titles are available.</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="strava-login">
+            <h2>Login with Strava</h2>
+            <p>Connect to Strava to allow Deck to update your activities. Requests activity:read_all and activity:write.
+            </p>
+            <a href="{% url 'titles:strava_login' %}" class="strava-button">
+                <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava">
+            </a>
+            <p class="affiliation-note">We are not affiliated with Strava.</p>
+        </section>
+    </main>
+
 </body>
+
 </html>
