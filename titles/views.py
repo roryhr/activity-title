@@ -50,7 +50,7 @@ def strava_webhook(request):
         object_type = event_data.get("object_type")
         activity_id = event_data["object_id"]
 
-        print(f"Received event: {event_type}")
+        logging.info(f"Received event: {event_type}")
         messages.info(request, f"Received event: {event_type}")
 
         # Handle the event based on its type

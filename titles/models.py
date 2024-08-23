@@ -57,14 +57,15 @@ class Token(models.Model):
             logging.info("TOKEN GOOD")
             return None
 
-        # Make the request to refresh the token
-        data = {
-            "client_id": settings.STRAVA_CLIENT_ID,
-            "client_secret": settings.STRAVA_CLIENT_SECRET,
-            "grant_type": "refresh_token",
-            "refresh_token": self.refresh_token,
-        }
-        response = requests.post("https://www.strava.com/oauth/token", data=data)
+        response = requests.post(
+            "https://www.strava.com/oauth/token",
+            data={
+                "client_id": settings.STRAVA_CLIENT_ID,
+                "client_secret": settings.STRAVA_CLIENT_SECRET,
+                "grant_type": "refresh_token",
+                "refresh_token": self.refresh_token,
+            },
+        )
 
         if response.status_code == 200:
             token_data = response.json()

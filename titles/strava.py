@@ -6,11 +6,10 @@ from titles.models import Token, Title
 
 
 def get_token():
-    """Get a token from the database
-    if there's no token perform the auth and then persist the token"""
-    access_token_record = get_object_or_404(Token, athlete_id=23193264)
-    if access_token_record:
-        return access_token_record.access_token
+    """Get a token from the database"""
+    token_record = get_object_or_404(Token, athlete_id=23193264)
+    token_record.refresh()
+    return token_record.access_token
 
 
 def update_activity(id):
