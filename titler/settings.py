@@ -10,9 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import logging
 import environ
 
 from pathlib import Path
+
+logging.basicConfig(level=logging.INFO)
 
 
 env = environ.Env(DEBUG=(bool, False))

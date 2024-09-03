@@ -9,5 +9,10 @@ That's it!
 ```
 Python 3.11
 Django 5.0.7
+whitenoise  6.7.0
 ```
+
+Static files are handled by whitenoise. 
+
+Deployd to http://strava-deck.fly.dev/
 

@@ -56,7 +56,8 @@ def strava_webhook(request):
         # Handle the event based on its type
         if object_type == "activity":
             if event_type == "create":
-                update_activity(id=activity_id)
+                # update_activity(id=activity_id)
+                pass
             elif event_type == "update":
                 # Handle activity update
                 pass
@@ -115,9 +116,9 @@ def strava_callback(request):
             expires_at=expires_at,
         )
 
-        print("SUCCESS!")
+        logging.info("SUCCESS!")
         return redirect("titles:index")
     else:
-        print("NO success. womp womp")
+        logging.info("NO success. womp womp")
         # Handle error in OAuth process
         return redirect("titles:index")

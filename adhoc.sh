@@ -1,6 +1,7 @@
 #!/bin/bash
 
-#Handy one-off scripts
+# Handy one-off curls to manage the webhook subscription and
+# test my API
 if [ -f .env ]; then
   # shellcheck disable=SC2046
   export $(grep -v '^#' .env | xargs)
@@ -17,11 +18,11 @@ fi
 #  -F verify_token=STRAVA
 
 
-## View a subscription
-#curl -G https://www.strava.com/api/v3/push_subscriptions \
-#  -d client_id="$STRAVA_CLIENT_ID"  \
-#  -d client_secret="$STRAVA_CLIENT_SECRET" \
-#  | jq
+# View a subscription
+curl -sG https://www.strava.com/api/v3/push_subscriptions \
+  -d client_id="$STRAVA_CLIENT_ID"  \
+  -d client_secret="$STRAVA_CLIENT_SECRET" \
+  | jq
 
 
 ## Delete a subscription
@@ -29,14 +30,14 @@ fi
 #"https://www.strava.com/api/v3/push_subscriptions/$STRAVA_CLIENT_ID?client_id=$STRAVA_CLIENT_ID&client_secret=$STRAVA_CLIENT_SECRET"
 
 
-# Test the webhook
-curl -X POST http://127.0.0.1:8000/webhook \
--H 'Content-Type: application/json' \
--d '{
-    "aspect_type": "update",
-    "event_time": 1549560669,
-    "object_id": 1234567890,
-    "object_type": "activity",
-    "owner_id": 9999999,
-    "subscription_id": 999999
-  }'
+## Test the webhook
+#curl -X POST http://127.0.0.1:8000/webhook \
+#-H 'Content-Type: application/json' \
+#-d '{
+#    "aspect_type": "update",
+#    "event_time": 1549560669,
+#    "object_id": 1234567890,
+#    "object_type": "activity",
+#    "owner_id": 9999999,
+#    "subscription_id": 999999
+#  }'
