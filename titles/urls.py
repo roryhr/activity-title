@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import views, strava
 
 app_name = "titles"
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path("webhook", views.strava_webhook, name="strava_webhook"),
     path("strava/callback", views.strava_callback, name="strava_callback"),
     path("strava/login", views.strava_login, name="strava_login"),
+    path("activity/update/<int:id>", views.update_activity_view),
 ]

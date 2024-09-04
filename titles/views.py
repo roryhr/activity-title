@@ -12,7 +12,7 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Title, Token
-from .strava import update_activity
+from titles.strava import update_activity
 
 
 class IndexView(generic.ListView):
@@ -54,19 +54,11 @@ def strava_webhook(request):
         messages.info(request, f"Received event: {event_type}")
 
         # Handle the event based on its type
-        if object_type == "activity":
-            if event_type == "create":
-                # update_activity(id=activity_id)
-                pass
-            elif event_type == "update":
-                # Handle activity update
-                pass
-            elif event_type == "delete":
-                # Handle activity deletion
-                pass
+        if object_type == "activity" and event_type == "create":
+            update_activity(id=activity_id)
         return JsonResponse(status=200, data={"status": "Event received"})
-    else:
-        return JsonResponse(status=405, data={"error": "Method not allowed"})
+
+    return JsonResponse(status=405, data={"error": "Method not allowed"})
 
 
 def strava_login(request):
@@ -122,3 +114,9 @@ def strava_callback(request):
         logging.info("NO success. womp womp")
         # Handle error in OAuth process
         return redirect("titles:index")
+
+
+def update_activity_view(request, id):
+    logging.info("In the view")
+    update_activity(id)
+    return redirect("titles:index")

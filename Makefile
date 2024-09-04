@@ -1,5 +1,7 @@
+.PHONY: dev test
+
 dev:
-	python manage.py runserver
+	export DEBUG=True && python manage.py runserver
 
 test:
 	python manage.py test

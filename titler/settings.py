@@ -140,3 +140,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 STRAVA_CLIENT_ID = env("STRAVA_CLIENT_ID")
 STRAVA_CLIENT_SECRET = env("STRAVA_CLIENT_SECRET")
 VERIFY_TOKEN = "STRAVA"
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://strava-deck.fly.dev",
+]

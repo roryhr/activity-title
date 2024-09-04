@@ -9,25 +9,28 @@ else
   echo ".env file not found!"
 fi
 
-## Create a subscription
-#curl -X POST \
-#  https://www.strava.com/api/v3/push_subscriptions \
-#  -F client_id="$STRAVA_CLIENT_ID" \
-#  -F client_secret="$STRAVA_CLIENT_SECRET" \
-#  -F callback_url=https://568a-98-245-200-18.ngrok-free.app/webhook \
-#  -F verify_token=STRAVA
+# Create a subscription
+curl -X POST \
+  https://www.strava.com/api/v3/push_subscriptions \
+  -F client_id="$STRAVA_CLIENT_ID" \
+  -F client_secret="$STRAVA_CLIENT_SECRET" \
+  -F callback_url=https://strava-deck.fly.dev/webhook \
+  -F verify_token=STRAVA
 
 
-# View a subscription
-curl -sG https://www.strava.com/api/v3/push_subscriptions \
-  -d client_id="$STRAVA_CLIENT_ID"  \
-  -d client_secret="$STRAVA_CLIENT_SECRET" \
-  | jq
+## View a subscription
+#curl -sG https://www.strava.com/api/v3/push_subscriptions \
+#  -d client_id="$STRAVA_CLIENT_ID"  \
+#  -d client_secret="$STRAVA_CLIENT_SECRET" \
+#  | jq
 
 
-## Delete a subscription
-#curl -vX DELETE \
-#"https://www.strava.com/api/v3/push_subscriptions/$STRAVA_CLIENT_ID?client_id=$STRAVA_CLIENT_ID&client_secret=$STRAVA_CLIENT_SECRET"
+### Delete a subscription
+## 204 No Content if the delete is successful
+#curl -v -X DELETE https://www.strava.com/api/v3/push_subscriptions/262230 \
+#  -G \
+#  --data-urlencode "client_id=$STRAVA_CLIENT_ID" \
+#  --data-urlencode "client_secret=$STRAVA_CLIENT_SECRET"
 
 
 ## Test the webhook
