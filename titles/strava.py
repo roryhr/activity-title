@@ -1,7 +1,6 @@
 import logging
 
 import requests
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from titles.models import Token, Title
@@ -27,6 +26,8 @@ def update_activity(id):
         logging.info("Activity name updated successfully!")
         t.used_at = timezone.now()
 
+        # TODO: update the title linked activity id too
+
 
 def get_activity(id):
     headers = {"Authorization": f"Bearer {get_token()}"}
@@ -38,7 +39,3 @@ def get_activity(id):
     if response.status_code == 200:
         logging.info("Activity name updated successfully!")
     return response.json()
-
-
-if __name__ == "__main__":
-    get_activity(12149146937)

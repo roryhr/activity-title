@@ -14,5 +14,7 @@ whitenoise  6.7.0
 
 Static files are handled by whitenoise. 
 
-Deployd to http://strava-deck.fly.dev/
+GitHub actions automatically deploy main to prod. 
+
+Deployed to http://strava-deck.fly.dev/
 
