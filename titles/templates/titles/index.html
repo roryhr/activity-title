@@ -14,7 +14,6 @@
         <h1>Strava Deck</h1>
     </header>
     <main>
-
         {% if messages %}
         <section class="messages">
             <ul>
@@ -32,6 +31,7 @@
                 <li>
                     <a href="{% url 'titles:detail' title.id %}" class="title-link">{{ title.title }}</a>
                     <p class="created-at">Created at: {{ title.created_at }}</p>
+                    <p class="created-at">Used at: {{ title.used_at }}</p>
                 </li>
                 {% empty %}
                 <li>No titles are available.</li>

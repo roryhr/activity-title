@@ -25,8 +25,8 @@ def update_activity(id):
     if response.status_code == 200:
         logging.info("Activity name updated successfully!")
         t.used_at = timezone.now()
-
-        # TODO: update the title linked activity id too
+        t.activity_set.create(activity_id=id)
+        t.save()
 
 
 def get_activity(id):
