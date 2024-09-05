@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from .models import Question, Title
+from .models import Title
 
-admin.site.register(Question)
 admin.site.register(Title)

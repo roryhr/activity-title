@@ -9,5 +9,5 @@ urlpatterns = [
     path("webhook", views.strava_webhook, name="strava_webhook"),
     path("strava/callback", views.strava_callback, name="strava_callback"),
     path("strava/login", views.strava_login, name="strava_login"),
-    path("activity/update/<int:id>", views.update_activity_view),
+    # path("activity/update/<int:id>", views.update_activity_view),
 ]
