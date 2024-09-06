@@ -29,7 +29,7 @@
             <ul>
                 {% for title in latest_strava_title_list %}
                 <li>
-                    <a href="{% url 'titles:detail' title.id %}" class="title-link">{{ title.title }}</a>
+                    <a href="{% url 'titles:detail' title.id %}" class="title-link">{{ title.title|linebreaksbr }}</a>
                     <p class="created-at">Created at: {{ title.created_at }}</p>
                     <p class="created-at">Used at: {{ title.used_at }}</p>
                 </li>
