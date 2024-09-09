@@ -1,5 +1,5 @@
 fly.toml
 .git/
 #TODO: remove db from docker image
-*.sqlite3
+#*.sqlite3
 .idea

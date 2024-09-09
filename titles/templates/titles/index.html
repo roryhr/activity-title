@@ -23,7 +23,14 @@
             </ul>
         </section>
         {% endif %}
+        <section class="titles">
+            <p>This was inspired by TweetDeck which enabled power users to schedule tweets back when Twitter didn't have that feature.
+                Note: this is my Strava app that is only connected to my Strava.
+                I manage the list using Django's admin.
 
+                If you'd like an account shoot me an email and I can build it.
+            </p>
+        </section>
         <section class="titles">
             <h2>List of Titles</h2>
             <ul>
@@ -38,10 +45,8 @@
                 {% endfor %}
             </ul>
         </section>
-
         <section class="strava-login">
-            <h2>Login with Strava</h2>
-            <p>Connect to Strava to allow Deck to update your activities. Requests activity:read_all and activity:write.
+            <p>Connect to Strava to allow Strava Deck to update activities. Requests activity:read_all and activity:write. Note: this won't work unless you're me.
             </p>
             <a href="{% url 'titles:strava_login' %}" class="strava-button">
                 <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava">
