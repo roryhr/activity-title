@@ -17,12 +17,10 @@ from pathlib import Path
 
 logging.basicConfig(level=logging.INFO)
 
-
-env = environ.Env(DEBUG=(bool, False))
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env(DEBUG=(bool, False), DB_NAME=(str, BASE_DIR / "db.sqlite3"))
 
 # Take environment variables from .env file
 environ.Env.read_env(BASE_DIR / ".env")
@@ -85,11 +83,10 @@ WSGI_APPLICATION = "titler.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": env("DB_NAME"),
     }
 }
 
