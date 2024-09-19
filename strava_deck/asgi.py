@@ -1,5 +1,5 @@
 """
-ASGI config for titler project.
+ASGI config for strava_deck project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "titler.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "strava_deck.settings")
 
 application = get_asgi_application()

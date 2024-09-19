@@ -4,7 +4,7 @@ import requests
 from django.db import models
 from django.utils import timezone
 
-from titler import settings
+from strava_deck import settings
 
 
 class Title(models.Model):
