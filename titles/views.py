@@ -6,7 +6,7 @@ import requests
 from django.conf import settings
 from django.contrib import messages
 from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
@@ -120,3 +120,7 @@ def update_activity_view(request, id):
     logging.info("In the view")
     update_activity(id)
     return redirect("titles:index")
+
+
+def about(request):
+    return render(request, "titles/about.html")

@@ -12,17 +12,11 @@
 <body>
     <header>
         <h1>Strava Deck</h1>
+        <nav>
+            <a href="{% url 'titles:about' %}">About</a>
+        </nav>
     </header>
     <main>
-        {% if messages %}
-        <section class="messages">
-            <ul>
-                {% for message in messages %}
-                <li class="message {{ message.tags }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        </section>
-        {% endif %}
         <section class="titles">
             <p>This was inspired by TweetDeck which enabled power users to schedule tweets back when Twitter didn't have that feature.
                 Note: this is my Strava app that is only connected to my Strava.
