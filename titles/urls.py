@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views, strava
+from . import views
 
 app_name = "titles"
 urlpatterns = [
