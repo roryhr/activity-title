@@ -5,14 +5,16 @@ from urllib.parse import urlencode, urlunparse
 import requests
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Title, Token
 from titles.strava import update_activity
+from .models import Title, Token
 
 
 class IndexView(generic.ListView):
@@ -95,7 +97,8 @@ def strava_callback(request):
 
     if response.status_code == 200:
         token_data = response.json()
-        athlete_id = token_data["athlete"]["id"]
+        user_data = token_data["athlete"]
+        athlete_id = user_data["id"]
         access_token = token_data["access_token"]
         refresh_token = token_data["refresh_token"]
         expires_at = timezone.datetime.fromtimestamp(token_data["expires_at"])
@@ -108,6 +111,16 @@ def strava_callback(request):
             expires_at=expires_at,
         )
 
+        user, created = User.objects.get_or_create(username=athlete_id)
+
+        if created:
+            # Set other details like email, first name, etc.
+            user.first_name = user_data["firstname"]
+            user.last_name = user_data["lastname"]
+            user.save()
+
+        # Log in the user
+        login(request, user)
         logging.info("SUCCESS!")
         return redirect("titles:index")
     else:
