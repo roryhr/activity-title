@@ -15,6 +15,16 @@ header {
     text-align: center;
 }
 
+header nav a {
+    color: #fff; /* Makes the nav links white */
+    text-decoration: none; /* Removes the underline */
+    margin: 0 15px; /* Adds spacing between links */
+}
+
+header nav a:hover {
+    text-decoration: underline; /* Adds underline on hover */
+}
+
 main {
     padding: 1rem;
 }
@@ -25,22 +35,6 @@ h1 {
 
 .messages {
     margin-bottom: 1rem;
-}
-
-.message {
-    padding: 0.5rem;
-    border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
-}
-
-.message.info {
-    background-color: #d9edf7;
-    color: #31708f;
-}
-
-.message.error {
-    background-color: #f2dede;
-    color: #a94442;
 }
 
 .titles {
@@ -97,8 +91,7 @@ footer {
     background: #333;
     color: #fff;
     text-align: center;
-    padding: 1rem;
-    position: absolute;
+    padding: 0.5rem;
     bottom: 0;
     width: 100%;
 }

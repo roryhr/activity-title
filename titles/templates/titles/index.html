@@ -1,51 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- templates/index.html -->
+{% extends 'titles/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strava Deck</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
+{% block title %}
+Strava Deck - Home
+{% endblock %}
 
-<body>
-    <header>
-        <h1>Strava Deck</h1>
-        <nav>
-            <a href="{% url 'titles:about' %}">About</a>
-        </nav>
-    </header>
-    <main>
-        <section class="titles">
-            <p>This was inspired by TweetDeck which enabled power users to schedule tweets back when Twitter didn't have that feature.
-                Note: this is my Strava app that is only connected to my Strava.
-            </p>
-        </section>
-        <section class="titles">
-            <h2>List of Titles</h2>
-            <ul>
-                {% for title in latest_strava_title_list %}
-                <li>
-                    <a href="{% url 'titles:detail' title.id %}" class="title-link">{{ title.title|linebreaksbr }}</a>
-                    <p class="created-at">Created at: {{ title.created_at }}</p>
-                    <p class="created-at">Used at: {{ title.used_at }}</p>
-                </li>
-                {% empty %}
-                <li>No titles are available.</li>
-                {% endfor %}
-            </ul>
-        </section>
-        <section class="strava-login">
-            <p>Connect to Strava to allow Strava Deck to update activities. Requests activity:read_all and activity:write. Note: this won't work unless you're me.
-            </p>
-            <a href="{% url 'titles:strava_login' %}" class="strava-button">
-                <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava">
-            </a>
-            <p class="affiliation-note">We are not affiliated with Strava.</p>
-        </section>
-    </main>
+{% block content %}
+{% load static %}
+<section class="titles">
+    <p>This was inspired by TweetDeck which enabled power users to schedule tweets back when Twitter didn't have
+        that feature.
+        Note: this is my Strava app that is only connected to my Strava.
+    </p>
+</section>
+<section class="titles">
+    {% if user.is_authenticated %}
+    <p>Welcome back, {{ user.first_name }}!</p>
+    {% else %}
+    <p>Welcome to the Strava Titles App!</p>
+    {% endif %}
+</section>
+<section class="titles">
+    <h2>List of Titles</h2>
+    <ul>
+        {% for title in latest_strava_title_list %}
+        <li>
+            <a href="{% url 'titles:detail' title.id %}" class="title-link">{{ title.title|linebreaksbr }}</a>
+            <p class="created-at">Created at: {{ title.created_at }}</p>
+            <p class="created-at">Used at: {{ title.used_at }}</p>
+        </li>
+        {% empty %}
+        <li>No titles are available.</li>
+        {% endfor %}
+    </ul>
+</section>
 
-</body>
-
-</html>
+<section class="strava-login">
+    <p>Connect to Strava to allow Strava Deck to update activities. Requests activity:read_all and activity:write.
+        Note: this won't work unless you're me.
+    </p>
+    <a href="{% url 'titles:strava_login' %}" class="strava-button">
+        <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava">
+    </a>
+    <p class="affiliation-note">We are not affiliated with Strava.</p>
+</section>
+{% endblock %}
