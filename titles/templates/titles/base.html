@@ -1,10 +1,11 @@
-<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Strava Deck</title>
+    <title>
+        {% block title %}Strava Deck{% endblock %}
+    </title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
@@ -21,6 +22,11 @@
     {% block content %}
     Default content if no block is overridden
     {% endblock %}
+
+    <section class="disclaimer">
+        <p class="affiliation-note">Strava Deck is not affiliated with Strava. We use the Strava API to provide
+            these features, but we are an independent application.</p>
+    </section>
 </main>
 
 <footer>

@@ -1,53 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'titles/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Strava Deck</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
+{% block title %}
+About Strava Deck
+{% endblock %}
 
-<body>
-    <header>
-        <h1>About Strava Deck</h1>
-    </header>
-    <main>
-        <section class="about-intro">
-            <p>
-                Welcome to Strava Deck! This application was inspired by the famous TweetDeck, providing power users with an easy way to manage their Strava activities. It’s a personalized tool that connects directly to Strava, allowing users to schedule and manage their activities efficiently.
-            </p>
-        </section>
+{% block content %}
+<section class="about-intro">
+    <p>
+        Welcome to Strava Deck! This application was inspired by the famous TweetDeck, providing power users with an
+        easy way to manage their Strava activities. It’s a personalized tool that connects directly to Strava,
+        allowing users to schedule and manage their activities efficiently.
+    </p>
+</section>
 
-        <section class="about-details">
-            <h2>Our Mission</h2>
-            <p>
-                Strava Deck was built to streamline activity tracking and management for athletes and fitness enthusiasts. Our goal is to help users stay organized, set goals, and analyze their progress effortlessly using the Strava API.
-            </p>
-            <h2>Features</h2>
-            <ul>
-                <li>Connect directly to your Strava account to track and update activities.</li>
-                <li>View, schedule, and organize activities using a simple interface.</li>
-                <li>Personalized features for power users.</li>
-                <li>Manage activity titles and logs seamlessly with Strava Deck’s integrated tools.</li>
-            </ul>
-        </section>
+<section class="about-details">
+    <h2>Our Mission</h2>
+    <p>
+        Strava Deck was built to streamline activity tracking and management for athletes and fitness enthusiasts.
+        Our goal is to help users stay organized, set goals, and analyze their progress effortlessly using the
+        Strava API.
+    </p>
+    <h2>Features</h2>
+    <ul>
+        <li>Connect directly to your Strava account to track and update activities.</li>
+        <li>View, schedule, and organize activities using a simple interface.</li>
+        <li>Personalized features for power users.</li>
+        <li>Manage activity titles and logs seamlessly with Strava Deck’s integrated tools.</li>
+    </ul>
+</section>
 
-        <section class="about-contact">
-            <h2>Contact Us</h2>
-            <p>
-                Have any questions or want to request a feature? Feel free to reach out! If you'd like an account, send an email, and we’ll get you set up.
-            </p>
-            <p>Email: <a href="mailto:support@stravadeck.com">support@stravadeck.com</a></p>
-        </section>
-<a href="{% url 'titles:index' %}">Home</a>
-
-        <section class="disclaimer">
-            <p class="affiliation-note">Note: Strava Deck is not affiliated with Strava. We use the Strava API to provide these features, but we are an independent application.</p>
-        </section>
-    </main>
-
-</body>
-
-</html>
+<section class="about-contact">
+    <h2>Contact Us</h2>
+    <p>
+        Have any questions or want to request a feature? Feel free to reach out! If you'd like an account, send an
+        email, and we’ll get you set up.
+    </p>
+    <p>Email: <a href="mailto:support@stravadeck.com">support@stravadeck.com</a></p>
+</section>
+{% endblock %}
