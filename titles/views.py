@@ -111,12 +111,12 @@ def strava_callback(request):
             expires_at=expires_at,
         )
 
-        user, created = User.objects.get_or_create(username=athlete_id)
+        user, created = User.objects.get_or_create(username=user_data["username"])
 
         if created:
-            # Set other details like email, first name, etc.
             user.first_name = user_data["firstname"]
             user.last_name = user_data["lastname"]
+            user.athlete_id = athlete_id
             user.save()
 
         # Log in the user
