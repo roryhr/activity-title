@@ -44,3 +44,6 @@ curl -X POST \
 #    "owner_id": 9999999,
 #    "subscription_id": 999999
 #  }'
+
+
+# find . -type f ! -path "./.git/*" ! -path "./.idea/*" -exec file --mime {} \; | grep 'text/' | cut -d: -f1 | xargs -I{} sh -c 'echo -e "\n===== {} =====\n"; cat {}' | ollama run llama3.2 "Add a create title form to the index page"

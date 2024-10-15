@@ -1,4 +1,3 @@
-<!-- templates/index.html -->
 {% extends 'titles/base.html' %}
 
 {% block title %}
@@ -7,12 +6,14 @@ Strava Deck - Home
 
 {% block content %}
 {% load static %}
-<section class="titles">
-    <p>This was inspired by TweetDeck which enabled power users to schedule tweets back when Twitter didn't have
-        that feature.
-        Note: this is my Strava app that is only connected to my Strava.
-    </p>
-</section>
+{% block messages %}
+    <ul id="messages">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
 <section class="titles">
     {% if user.is_authenticated %}
     <p>Welcome back, {{ user.first_name }}!</p>
@@ -20,6 +21,21 @@ Strava Deck - Home
     <p>Welcome to the Strava Titles App!</p>
     {% endif %}
 </section>
+
+<section class="titles">
+    <p>This was inspired by TweetDeck which enabled power users to schedule tweets back when Twitter didn't have
+        that feature.
+        Note: this is my Strava app that is only connected to my Strava.
+    </p>
+</section>
+
+
+<h1>Create New Title</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create</button>
+</form>
 <section class="titles">
     <h2>List of Titles</h2>
     <ul>

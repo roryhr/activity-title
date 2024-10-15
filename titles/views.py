@@ -9,26 +9,41 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
 from titles.strava import update_activity
+from .forms import TitleForm
 from .models import Title, Token
 
 
-class IndexView(generic.ListView):
-    template_name = "titles/index.html"
-    context_object_name = "latest_strava_title_list"
+def index(request):
+    if request.method == "POST":
+        form = TitleForm(request.POST)
+        if form.is_valid():
+            title = form.save()
+            messages.success(request, "Title saved successfully!")
+            return redirect("titles:detail", pk=title.pk)
+    else:
+        form = TitleForm()
 
-    def get_queryset(self):
-        """Return the last five published questions."""
-        return Title.objects.order_by("-created_at")[:5]
+    context = {
+        "form": form,
+        "latest_strava_title_list": Title.objects.order_by("-created_at")[:5],
+    }
+    return render(request, "titles/index.html", context)
 
 
 class DetailView(generic.DetailView):
     model = Title
     template_name = "titles/detail.html"
+
+
+class DeleteView(generic.DeleteView):
+    model = Title
+    success_url = "/titles/"
 
 
 @csrf_exempt

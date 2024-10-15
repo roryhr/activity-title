@@ -19,5 +19,11 @@ Strava Deck - Detail
         <li>No related activities found.</li>
         {% endfor %}
     </ul>
+
+    <form method="post" action="{% url 'titles:delete' title.id %}">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+
 </main>
 {% endblock %}
