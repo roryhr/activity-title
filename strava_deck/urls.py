@@ -21,7 +21,7 @@ from django.urls import include, path
 from titles import views
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("titles/", include("titles.urls")),
+    # path("", views.index, name="index"),
+    path("", include("titles.urls")),
     path("admin/", admin.site.urls),
 ]

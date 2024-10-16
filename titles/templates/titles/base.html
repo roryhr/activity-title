@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        {% block title %}Strava Deck{% endblock %}
+        {% block title %}Activity Title{% endblock %}
     </title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -12,7 +12,7 @@
 </head>
 <body>
 <header>
-    <h1>Strava Deck</h1>
+    <h1>Activity Title</h1>
     <nav>
         <a href="{% url 'titles:index' %}">Home</a>
         <a href="{% url 'titles:about' %}">About</a>
@@ -25,7 +25,8 @@
     {% endblock %}
 
     <section class="disclaimer">
-        <p class="affiliation-note">Strava Deck is not affiliated with Strava. We use the Strava API to provide
+        <img src="{% static 'img/api_logo_cptblWith_strava_horiz_gray.png' %}" alt="Login with Strava">
+        <p class="affiliation-note">Activity Title is not affiliated with Strava. We use the Strava API to provide
             these features, but we are an independent application.</p>
     </section>
 </main>

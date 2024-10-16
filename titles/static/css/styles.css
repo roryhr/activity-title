@@ -8,6 +8,8 @@ body {
     background-color: #f4f4f4;
 }
 
+/* Header styles */
+
 header {
     background: #333;
     color: #fff;
@@ -24,6 +26,8 @@ header nav a {
 header nav a:hover {
     text-decoration: underline; /* Adds underline on hover */
 }
+
+/* Main content styles */
 
 main {
     padding: 1rem;
@@ -75,11 +79,11 @@ h1 {
     padding: 1rem;
 }
 
-.strava-button img {
-    display: block;
+/*.strava-button img {
+    *//*display: block;*//*
     max-width: 100%;
     height: auto;
-}
+}*/
 
 .affiliation-note {
     font-size: 0.9rem;

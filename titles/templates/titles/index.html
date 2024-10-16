@@ -1,24 +1,24 @@
 {% extends 'titles/base.html' %}
 
 {% block title %}
-Strava Deck - Home
+Activity Title - Home
 {% endblock %}
 
 {% block content %}
 {% load static %}
 {% block messages %}
-    <ul id="messages">
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
+<ul id="messages">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
 {% endblock %}
 
 <section class="titles">
     {% if user.is_authenticated %}
     <p>Welcome back, {{ user.first_name }}!</p>
     {% else %}
-    <p>Welcome to the Strava Titles App!</p>
+    <p>Welcome to the Activity Title App!</p>
     {% endif %}
 </section>
 
@@ -27,16 +27,13 @@ Strava Deck - Home
         that feature.
         Note: this is my Strava app that is only connected to my Strava.
     </p>
-</section>
 
-
-<h1>Create New Title</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
-</form>
-<section class="titles">
+    <h1>Create New Title</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create</button>
+    </form>
     <h2>List of Titles</h2>
     <ul>
         {% for title in latest_strava_title_list %}

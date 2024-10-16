@@ -9,7 +9,6 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
