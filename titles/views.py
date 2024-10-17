@@ -6,9 +6,12 @@ import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
@@ -18,11 +21,14 @@ from .forms import TitleForm
 from .models import Title, Token
 
 
+@login_required
 def index(request):
     if request.method == "POST":
         form = TitleForm(request.POST)
         if form.is_valid():
-            title = form.save()
+            title = form.save(commit=False)
+            title.user = request.user
+            title.save()
             messages.success(request, "Title saved successfully!")
             return redirect("titles:detail", pk=title.pk)
     else:
@@ -30,19 +36,21 @@ def index(request):
 
     context = {
         "form": form,
-        "latest_strava_title_list": Title.objects.order_by("-created_at")[:5],
+        "latest_strava_title_list": Title.objects.filter(user=request.user).order_by(
+            "-created_at"
+        )[:5],
     }
     return render(request, "titles/index.html", context)
 
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Title
     template_name = "titles/detail.html"
 
 
-class DeleteView(generic.DeleteView):
+class DeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Title
-    success_url = "/titles/"
+    success_url = reverse_lazy("titles:index")
 
 
 @csrf_exempt
@@ -69,9 +77,8 @@ def strava_webhook(request):
         logging.info(f"Received event: {event_type}")
         messages.info(request, f"Received event: {event_type}")
 
-        # Handle the event based on its type
         if object_type == "activity" and event_type == "create":
-            update_activity(id=activity_id)
+            update_activity(id=activity_id, user=request.user)
         return JsonResponse(status=200, data={"status": "Event received"})
 
     return JsonResponse(status=405, data={"error": "Method not allowed"})
@@ -151,3 +158,11 @@ def update_activity_view(request, id):
 
 def about(request):
     return render(request, "titles/about.html")
+
+
+def logged_out(request):
+    return render(request, "titles/logged_out.html")
+
+
+def faq(request):
+    return render(request, "titles/faq.html")

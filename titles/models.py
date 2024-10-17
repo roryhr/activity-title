@@ -1,6 +1,7 @@
 import logging
 
 import requests
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
@@ -8,6 +9,7 @@ from strava_deck import settings
 
 
 class Title(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

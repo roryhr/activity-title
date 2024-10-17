@@ -1,0 +1,6 @@
+{% extends 'titles/base.html' %}
+
+{% block content %}
+<p>You are not logged in. Please <a href="{% url 'login' %}">log in</a> or <a href="{% url 'titles:strava_login' %}">connect
+    with Strava</a> to continue.</p>
+{% endblock %}

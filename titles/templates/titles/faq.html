@@ -1,0 +1,51 @@
+{% extends 'titles/base.html' %}
+
+{% block title %}Frequently Asked Questions - Activity Title{% endblock %}
+
+{% block content %}
+<h1>Frequently Asked Questions</h1>
+
+<section class="faq">
+    <h2>General</h2>
+    <details>
+        <summary>What is Activity Title?</summary>
+        <p>Activity Title is a web application that allows you to create and manage custom titles for your Strava
+            activities. It's designed to replace generic activity names with more creative and personalized ones.</p>
+    </details>
+    <details>
+        <summary>How does it work?</summary>
+        <p>You create and save activity titles in advance. When you upload a new activity to Strava, Activity Title
+            automatically updates it with your chosen title via Strava's webhook API.</p>
+    </details>
+    <details>
+        <summary>Is Activity Title free?</summary>
+        <p>Currently, Activity Title is a personal project and is not publicly available. I plan to open access in the
+            future.</p>
+    </details>
+
+    <h2>Strava Integration</h2>
+    <details>
+        <summary>What Strava permissions does Activity Title require?</summary>
+        <p>Activity Title requires permission to read and write activity data. This is necessary to update your activity
+            titles.</p>
+    </details>
+    <details>
+        <summary>What happens to my Strava data?</summary>
+        <p>Activity Title only stores your activity titles and the associated Strava activity ID. No other Strava data
+            is stored.</p>
+    </details>
+
+    <h2>Account and Access</h2>
+    <details>
+        <summary>How can I get an account?</summary>
+        <p>Currently, accounts are by invitation only. If you are interested in using Activity Title, please <a
+                href="mailto:roryhr@gmail.com">contact me</a>.</p>
+    </details>
+
+    <h2>Other</h2>
+    <details>
+        <summary>Who created Activity Title?</summary>
+        <p>Activity Title was created by Rory Hartong-Redden.</p>
+    </details>
+</section>
+{% endblock %}

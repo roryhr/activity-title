@@ -1,36 +1,43 @@
 {% extends 'titles/base.html' %}
 
 {% block title %}
-About Strava Deck
+About Activity Title - Streamline Your Strava Activities
 {% endblock %}
 
 {% block content %}
+<h1>About Activity Title</h1>
+
 <section class="about-intro">
     <p>
-        Welcome to Activity Title! This application was inspired by TweetDeck which gave power users an
-        easy way to manage their Twitter account and schedule future Tweets.
+        Tired of generic activity titles like "Afternoon Run"? Activity Title lets you pre-write creative titles and effortlessly apply them to your Strava activities.  Inspired by TweetDeck's scheduling features, this app helps you inject personality into your training log.
     </p>
+    <p>
+        This project was a fun opportunity to build a Django app, explore the Strava API and webhooks, and even leverage the power of ChatGPT! While currently a personal project connected to my own Strava account, the goal is to expand access in the future.
+    </p>
+
 </section>
 
 <section class="about-details">
-    <h2>Our Mission</h2>
+    <h2>How It Works</h2>
     <p>
-        Activity Title was built to streamline activity tracking and management for athletes and fitness enthusiasts.
-        Our goal is to help users stay organized, set goals, and analyze their progress effortlessly using the
-        Strava API.
+        Create and save your activity titles in advance. Then, when you upload a new activity to Strava, Activity Title automatically updates it with your chosen title.  No more boring default names!
     </p>
-    <h2>Features</h2>
+
+    <h2>Current Features</h2>
     <ul>
-        <li>Manage Strava activity names.</li>
-        <li>Manage Garmin Connect activity names.</li>
+        <li>Create and save activity titles.</li>
+        <li>Automatic Strava activity updates via webhooks.</li> <li>Easy activity title management.</li>
     </ul>
+
+
+    <h2>Future Plans</h2> <ul> <li>Open access for other Strava users.</li> <li>Integration with other fitness platforms (e.g., Garmin Connect).</li> </ul>
+
 </section>
 
 <section class="about-contact">
-    <h2>Contact Us</h2>
+    <h2>Get in Touch</h2>
     <p>
-        Have any questions or want to request a feature? Feel free to reach out! If you'd like an account, send an
-        email, and we’ll get you set up.
+        Have questions, feedback, or feature requests?  Interested in getting an account?  Send me an email!
     </p>
     <p>Email: <a href="mailto:roryhr@gmail.com">roryhr@gmail.com</a></p>
 </section>

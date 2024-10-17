@@ -79,12 +79,6 @@ h1 {
     padding: 1rem;
 }
 
-/*.strava-button img {
-    *//*display: block;*//*
-    max-width: 100%;
-    height: auto;
-}*/
-
 .affiliation-note {
     font-size: 0.9rem;
     color: #666;
@@ -98,4 +92,45 @@ footer {
     padding: 0.5rem;
     bottom: 0;
     width: 100%;
+}
+
+
+/* FAQ Styles */
+.faq {
+    margin-bottom: 2rem; /* Add some bottom margin */
+}
+
+.faq details {
+    margin-bottom: 1rem; /* Space between FAQ items */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 0.25rem; /* Rounded corners */
+    padding: 1rem;   /* Padding inside the FAQ item */
+    background-color: #fff; /* White background */
+}
+
+.faq summary {
+    font-weight: bold;
+    cursor: pointer;
+    outline: none; /* Remove focus outline */
+}
+
+.faq summary::marker { /* Remove the default disclosure arrow */
+    display: none;
+}
+
+.faq summary::-webkit-details-marker { /* For WebKit browsers */
+    display: none;
+}
+
+.faq p {  /* Paragraph styles within FAQ item */
+    margin-top: 0.5rem; /* Add some top margin */
+}
+
+.faq a {  /* Link styles within FAQ item */
+    color: #007bff; /* Example blue link color */
+    text-decoration: none;
+}
+
+.faq a:hover {
+    text-decoration: underline;
 }

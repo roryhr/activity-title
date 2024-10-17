@@ -11,4 +11,5 @@ urlpatterns = [
     path("strava/callback", views.strava_callback, name="strava_callback"),
     path("strava/login", views.strava_login, name="strava_login"),
     path("about/", views.about, name="about"),
+    path("faq/", views.faq, name="faq"),
 ]
