@@ -40,6 +40,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "stravadeck.com",
     "activitytitle.com",
+    "www.activitytitle.com",
 ]
 
 
