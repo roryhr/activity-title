@@ -148,3 +148,5 @@ VERIFY_TOKEN = "STRAVA"
 CSRF_TRUSTED_ORIGINS = [
     "https://strava-deck.fly.dev",
 ]
+
+LOGIN_URL = "/login/"

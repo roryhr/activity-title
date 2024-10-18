@@ -1,27 +1,9 @@
 {% extends 'titles/base.html' %}
+{% load static %}
 
-{% block title %}
-Activity Title - Home
-{% endblock %}
+{% block title %}Activity Title - Login{% endblock %}
 
 {% block content %}
-{% load static %}
-{% block messages %}
-<ul id="messages">
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endblock %}
-
-<section class="titles">
-    {% if user.is_authenticated %}
-    <p>Welcome back, {{ user.first_name }}!</p>
-    {% else %}
-    <p>Welcome to the Activity Title App!</p>
-    {% endif %}
-</section>
-
 <section class="titles">
     <p>This was inspired by TweetDeck which enabled power users to schedule tweets back when Twitter didn't have
         that feature.</p>
@@ -30,9 +12,10 @@ Activity Title - Home
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Create</button>
+        <button>Create</button>
     </form>
-    <h2>List of Titles</h2>
+    <h2>Demo Data</h2>
+    <p>Here you'll see what you've created and if it's been linked to a Strava activity.</p>
     <ul>
         {% for title in latest_strava_title_list %}
         <li>

@@ -5,7 +5,7 @@ from urllib.parse import urlencode, urlunparse
 import requests
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -150,19 +150,28 @@ def strava_callback(request):
         return redirect("titles:index")
 
 
-def update_activity_view(request, id):
-    logging.info("In the view")
-    update_activity(id)
-    return redirect("titles:index")
-
-
 def about(request):
     return render(request, "titles/about.html")
 
 
 def logged_out(request):
-    return render(request, "titles/logged_out.html")
+    logout(request)
+    return redirect("titles:login")
 
 
 def faq(request):
     return render(request, "titles/faq.html")
+
+
+def login_view(request):
+    if request.user.is_authenticated:  # Redirect if already logged in.
+        return redirect("titles:index")
+
+    # TODO: only show my stuff
+    latest_strava_title_list = Title.objects.all().order_by("-created_at")[:5]
+
+    context = {
+        "form": TitleForm(),
+        "latest_strava_title_list": latest_strava_title_list,
+    }
+    return render(request, "titles/login.html", context)
