@@ -1,8 +1,11 @@
 import json
 from unittest.mock import patch
 
-from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
+
+from titles.views import strava_webhook
 
 
 class WebhookTestCase(TestCase):
@@ -38,10 +41,13 @@ class WebhookTestCase(TestCase):
             "object_id": event_id,
             "object_type": "activity",
         }
-
-        response = self.client.post(
+        mock_user = User.objects.create_user(username="testuser")
+        factory = RequestFactory()
+        request = factory.post(
             self.webhook_url, data=json.dumps(payload), content_type="application/json"
         )
+        request.user = mock_user
+        response = strava_webhook(request)
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {"status": "Event received"})
-        mock_update_activity.assert_called_once_with(id=event_id)
+        mock_update_activity.assert_called_once_with(id=event_id, user=mock_user)

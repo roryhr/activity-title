@@ -73,10 +73,7 @@ def strava_webhook(request):
         event_type = event_data.get("aspect_type")
         object_type = event_data.get("object_type")
         activity_id = event_data["object_id"]
-
         logging.info(f"Received event: {event_type}")
-        messages.info(request, f"Received event: {event_type}")
-
         if object_type == "activity" and event_type == "create":
             update_activity(id=activity_id, user=request.user)
         return JsonResponse(status=200, data={"status": "Event received"})
