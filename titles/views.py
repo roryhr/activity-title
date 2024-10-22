@@ -113,38 +113,34 @@ def strava_callback(request):
         },
     )
 
-    if response.status_code == 200:
-        token_data = response.json()
-        user_data = token_data["athlete"]
-        athlete_id = user_data["id"]
-        access_token = token_data["access_token"]
-        refresh_token = token_data["refresh_token"]
-        expires_at = timezone.datetime.fromtimestamp(token_data["expires_at"])
-
-        # Save or update the ShortLivedAccessToken
-        Token.objects.update_or_create(
-            athlete_id=athlete_id,
-            access_token=access_token,
-            refresh_token=refresh_token,
-            expires_at=expires_at,
-        )
-
-        user, created = User.objects.get_or_create(username=user_data["username"])
-
-        if created:
-            user.first_name = user_data["firstname"]
-            user.last_name = user_data["lastname"]
-            user.athlete_id = athlete_id
-            user.save()
-
-        # Log in the user
-        login(request, user)
-        logging.info("SUCCESS!")
+    if response.status_code != 200:
+        logging.info("NO success. Error in OAuth process")
         return redirect("titles:index")
-    else:
-        logging.info("NO success. womp womp")
-        # Handle error in OAuth process
-        return redirect("titles:index")
+
+    token_data = response.json()
+    user_data = token_data["athlete"]
+    athlete_id = user_data["id"]
+    access_token = token_data["access_token"]
+    refresh_token = token_data["refresh_token"]
+    expires_at = timezone.datetime.fromtimestamp(token_data["expires_at"])
+
+    user, created = User.objects.get_or_create(username=user_data["username"])
+    if created:
+        user.first_name = user_data["firstname"]
+        user.last_name = user_data["lastname"]
+        user.athlete_id = athlete_id
+        user.save()
+
+    Token.objects.update_or_create(
+        user=user,
+        access_token=access_token,
+        refresh_token=refresh_token,
+        expires_at=expires_at,
+    )
+
+    login(request, user)
+    logging.info("SUCCESS!")
+    return redirect("titles:index")
 
 
 def about(request):

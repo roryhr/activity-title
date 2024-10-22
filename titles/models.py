@@ -29,13 +29,13 @@ class Activity(models.Model):
 class Token(models.Model):
     """Bearer token for API auth"""
 
-    athlete_id = models.IntegerField(db_index=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     access_token = models.CharField(max_length=255)
     refresh_token = models.CharField(max_length=255)
-    expires_at = models.DateTimeField()  # When the access token expires
+    expires_at = models.DateTimeField()
 
     def __str__(self):
-        return f"{self.athlete_id} - Token"
+        return f"{self.user} - Token"
 
     def is_expired(self):
         """Check if the token is expired."""

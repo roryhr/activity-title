@@ -16,7 +16,7 @@ class StravaTests(TestCase):
             username="testuser", password="testpassword"
         )
         self.token = Token.objects.create(
-            athlete_id=23193264,
+            user=self.user,
             access_token="test_access_token",
             refresh_token="test_refresh_token",
             expires_at=timezone.now() + timezone.timedelta(days=1),
@@ -50,7 +50,7 @@ class StravaTests(TestCase):
 
         activity_id = 12345
 
-        update_activity(activity_id, self.user)
+        update_activity(id=activity_id, user=self.user)
 
         self.title.refresh_from_db()
         self.assertIsNone(self.title.used_at)

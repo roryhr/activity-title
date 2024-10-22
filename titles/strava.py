@@ -8,7 +8,7 @@ from titles.models import Token, Title
 
 def get_token(user):
     """Get a token from the database"""
-    token_record = Token.objects.filter(athlete_id=23193264).last()
+    token_record = Token.objects.filter(user=user).last()
     token_record.refresh()
     return token_record.access_token
 
