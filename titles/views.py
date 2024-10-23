@@ -119,7 +119,6 @@ def strava_callback(request):
 
     token_data = response.json()
     user_data = token_data["athlete"]
-    athlete_id = user_data["id"]
     access_token = token_data["access_token"]
     refresh_token = token_data["refresh_token"]
     expires_at = timezone.datetime.fromtimestamp(token_data["expires_at"])
@@ -128,7 +127,6 @@ def strava_callback(request):
     if created:
         user.first_name = user_data["firstname"]
         user.last_name = user_data["lastname"]
-        user.athlete_id = athlete_id
         user.save()
 
     Token.objects.update_or_create(
