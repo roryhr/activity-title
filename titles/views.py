@@ -139,6 +139,7 @@ def strava_callback(request):
         return redirect("titles:index")
 
     token_data = response.json()
+    logging.info("Strava callback", token_data)
     user_data = token_data["athlete"]
     access_token = token_data["access_token"]
     refresh_token = token_data["refresh_token"]
