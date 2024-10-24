@@ -21,7 +21,7 @@ def update_activity_name(id, user):
     id : int
     user : django.contrib.auth.models.User
     """
-    logging.info("Update activity name", id, user)
+    logging.info(f"Update activity name {id}, {user}")
     t = (
         Title.objects.filter(user=user)
         .filter(used_at__isnull=True)

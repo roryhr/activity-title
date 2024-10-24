@@ -139,23 +139,28 @@ def strava_callback(request):
         return redirect("titles:index")
 
     token_data = response.json()
-    logging.info("Strava callback", token_data)
+    logging.info("Strava callback")
+    logging.info(token_data)
     user_data = token_data["athlete"]
     access_token = token_data["access_token"]
     refresh_token = token_data["refresh_token"]
     expires_at = timezone.datetime.fromtimestamp(token_data["expires_at"])
 
-    user, created = User.objects.get_or_create(username=user_data["username"])
-    if created:
-        user.first_name = user_data["firstname"]
-        user.last_name = user_data["lastname"]
-        user.save()
+    user, created = User.objects.get_or_create(
+        username=user_data["username"],
+        defaults={
+            "first_name": user_data["firstname"],
+            "last_name": user_data["lastname"],
+        },
+    )
 
     Token.objects.update_or_create(
         user=user,
-        access_token=access_token,
-        refresh_token=refresh_token,
-        expires_at=expires_at,
+        defaults={
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "expires_at": expires_at,
+        },
     )
 
     login(request, user)
