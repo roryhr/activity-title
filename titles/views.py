@@ -16,13 +16,14 @@ from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from titles.strava import update_activity
+from titles.strava import update_activity_name
 from .forms import TitleForm
 from .models import Title, Token
 
 
 @login_required
 def index(request):
+    print(request.user)
     if request.method == "POST":
         form = TitleForm(request.POST)
         if form.is_valid():
@@ -67,15 +68,17 @@ def strava_webhook(request):
             return JsonResponse({"hub.challenge": hub_challenge})
         else:
             return JsonResponse(status=403, data={"error": "Verification failed"})
-
     elif request.method == "POST":
         event_data = json.loads(request.body)
         event_type = event_data.get("aspect_type")
         object_type = event_data.get("object_type")
         activity_id = event_data["object_id"]
         logging.info(f"Received event: {event_type}")
+        logging.info(event_data)
+        logging.info(request.user)
+        # TODO: Figure out user from the event_data instead of request
         if object_type == "activity" and event_type == "create":
-            update_activity(id=activity_id, user=request.user)
+            update_activity_name(id=activity_id, user=request.user)
         return JsonResponse(status=200, data={"status": "Event received"})
 
     return JsonResponse(status=405, data={"error": "Method not allowed"})

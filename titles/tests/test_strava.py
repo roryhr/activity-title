@@ -6,7 +6,7 @@ from django.test import TestCase, Client
 from django.utils import timezone
 
 from titles.models import Title, Token, Activity
-from titles.strava import update_activity, get_token
+from titles.strava import update_activity_name, get_token
 
 
 class StravaTests(TestCase):
@@ -31,7 +31,7 @@ class StravaTests(TestCase):
 
         activity_id = 12345
 
-        update_activity(activity_id, self.user)
+        update_activity_name(activity_id, self.user)
 
         mock_put.assert_called_with(
             url=f"https://www.strava.com/api/v3/activities/{activity_id}",
@@ -50,7 +50,7 @@ class StravaTests(TestCase):
 
         activity_id = 12345
 
-        update_activity(id=activity_id, user=self.user)
+        update_activity_name(id=activity_id, user=self.user)
 
         self.title.refresh_from_db()
         self.assertIsNone(self.title.used_at)

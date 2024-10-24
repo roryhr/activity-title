@@ -13,7 +13,15 @@ def get_token(user):
     return token_record.access_token
 
 
-def update_activity(id, user):
+def update_activity_name(id, user):
+    """Update activity name
+
+    Parameters
+    ----------
+    id : int
+    user : django.contrib.auth.models.User
+    """
+    logging.info("Update activity name", id, user)
     t = (
         Title.objects.filter(user=user)
         .filter(used_at__isnull=True)
