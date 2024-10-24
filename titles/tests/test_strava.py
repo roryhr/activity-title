@@ -1,4 +1,3 @@
-import json
 from unittest.mock import patch, MagicMock
 
 from django.contrib.auth.models import User
@@ -6,7 +5,7 @@ from django.test import TestCase, Client
 from django.utils import timezone
 
 from titles.models import Title, Token, Activity
-from titles.strava import update_activity_name, get_token
+from titles.strava import update_activity_name
 
 
 class StravaTests(TestCase):

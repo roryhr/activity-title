@@ -13,8 +13,8 @@ class WebhookTestCase(TestCase):
         self.client = Client()
         self.webhook_url = reverse("titles:strava_webhook")
 
-    @patch("titles.views.update_activity")
-    def test_webhook_update_event(self, mock_update_activity):
+    @patch("titles.views.update_activity_name")
+    def test_webhook_update_event(self, mock_update_activity_name):
         payload = {
             "aspect_type": "update",
             "event_time": 1549560669,
@@ -30,10 +30,10 @@ class WebhookTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {"status": "Event received"})
-        mock_update_activity.assert_not_called()
+        mock_update_activity_name.assert_not_called()
 
-    @patch("titles.views.update_activity")
-    def test_webhook_create_event(self, mock_update_activity):
+    @patch("titles.views.update_activity_name")
+    def test_webhook_create_event(self, mock_update_activity_name):
         event_id = 1234567890
         payload = {
             "aspect_type": "create",
@@ -50,4 +50,4 @@ class WebhookTestCase(TestCase):
         response = strava_webhook(request)
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {"status": "Event received"})
-        mock_update_activity.assert_called_once_with(id=event_id, user=mock_user)
+        mock_update_activity_name.assert_called_once_with(id=event_id, user=mock_user)

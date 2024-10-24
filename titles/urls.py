@@ -10,6 +10,7 @@ urlpatterns = [
     path("webhook", views.strava_webhook, name="strava_webhook"),
     path("strava/callback", views.strava_callback, name="strava_callback"),
     path("strava/login", views.strava_login, name="strava_login"),
+    path("strava/mobile/login", views.strava_mobile_login, name="strava_mobile_login"),
     path("about/", views.about, name="about"),
     path("faq/", views.faq, name="faq"),
     path("logout/", views.logged_out, name="logout"),

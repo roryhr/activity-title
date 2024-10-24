@@ -78,6 +78,12 @@ h1 {
     border-radius: 0.25rem;
     padding: 1rem;
 }
+.strava-buttons-container {
+    display: flex;
+    justify-content: space-around; /* Optional: Adjusts space between buttons */
+    align-items: center;
+}
+
 
 .affiliation-note {
     font-size: 0.9rem;

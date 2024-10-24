@@ -102,6 +102,24 @@ def strava_login(request):
     return redirect(url)
 
 
+def strava_mobile_login(request):
+    """Connect with Strava button"""
+    redirect_uri = request.build_absolute_uri("/strava/callback")
+    params = {
+        "client_id": settings.STRAVA_CLIENT_ID,
+        "response_type": "code",
+        "redirect_uri": redirect_uri,
+        "scope": "activity:read_all,activity:write",
+        "approval_prompt": "auto",
+    }
+
+    query_string = urlencode(params)
+    url = urlunparse(
+        ("https", "www.strava.com", "/oauth/mobile/authorize", "", query_string, "")
+    )
+    return redirect(url)
+
+
 def strava_callback(request):
     """Get the authorization code from the request"""
     code = request.GET.get("code")

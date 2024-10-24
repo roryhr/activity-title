@@ -29,11 +29,19 @@
     </ul>
 </section>
 
-<section class="strava-login">
-    <p>Connect with Strava to login</p>
-    <a href="{% url 'titles:strava_login' %}" class="strava-button">
-        <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava">
-    </a>
-    <p class="affiliation-note">We are not affiliated with Strava.</p>
-</section>
+<div class="strava-buttons-container">
+    <section class="strava-login">
+        <p>Web login. Click here if you use the Strava website.</p>
+        <a href="{% url 'titles:strava_login' %}" class="strava-button">
+            <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava">
+        </a>
+    </section>
+
+    <section class="strava-login">
+        <p>Mobile login. Click here if you use the Strava mobile app.</p>
+        <a href="{% url 'titles:strava_mobile_login' %}" class="strava-button">
+            <img src="{% static 'img/btn_strava_connectwith_orange.png' %}" alt="Login with Strava (Mobile)">
+        </a>
+    </section>
+</div>
 {% endblock %}

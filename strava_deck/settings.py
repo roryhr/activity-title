@@ -40,7 +40,6 @@ ALLOWED_HOSTS = [
     "localhost",
     "stravadeck.com",
     "activitytitle.com",
-    "www.activitytitle.com",
 ]
 
 
@@ -147,6 +146,7 @@ VERIFY_TOKEN = "STRAVA"
 
 CSRF_TRUSTED_ORIGINS = [
     "https://strava-deck.fly.dev",
+    "https://activitytitle.com",
 ]
 
 LOGIN_URL = "/login/"
