@@ -18,12 +18,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from titles.strava import update_activity_name
 from .forms import TitleForm
-from .models import Title, Token
+from .models import Title, Token, StravaUser
 
 
 @login_required
 def index(request):
-    print(request.user)
     if request.method == "POST":
         form = TitleForm(request.POST)
         if form.is_valid():
@@ -58,32 +57,39 @@ class DeleteView(LoginRequiredMixin, generic.DeleteView):
 def strava_webhook(request):
     """Called upon activity updates and creates"""
     if request.method == "GET":
-        # Verification step
-        hub_mode = request.GET.get("hub.mode")
-        hub_challenge = request.GET.get("hub.challenge")
-        hub_verify_token = request.GET.get("hub.verify_token")
-
-        if hub_mode == "subscribe" and hub_verify_token == settings.VERIFY_TOKEN:
-            logging.info("WEBHOOK_VERIFIED")
-            return JsonResponse({"hub.challenge": hub_challenge})
-        else:
-            return JsonResponse(status=403, data={"error": "Verification failed"})
+        return verify_webhook(request)
     elif request.method == "POST":
-        event_data = json.loads(request.body)
-        event_type = event_data.get("aspect_type")
-        object_type = event_data.get("object_type")
-        activity_id = event_data["object_id"]
-        logging.info(f"Received event: {event_type}")
-        logging.info(event_data)
-        logging.info(request.user)
-        if object_type == "activity" and event_type == "create":
-            user = User.objects.filter(
-                stravauser__athlete_id=event_data["owner_id"]
-            ).first()
-            update_activity_name(id=activity_id, user=user)
-        return JsonResponse(status=200, data={"status": "Event received"})
-
+        return handle_event(request)
     return JsonResponse(status=405, data={"error": "Method not allowed"})
+
+
+def verify_webhook(request):
+    """Verifies the webhook subscription with Strava."""
+    hub_mode = request.GET.get("hub.mode")
+    hub_challenge = request.GET.get("hub.challenge")
+    hub_verify_token = request.GET.get("hub.verify_token")
+
+    if hub_mode == "subscribe" and hub_verify_token == settings.VERIFY_TOKEN:
+        logging.info("WEBHOOK_VERIFIED")
+        return JsonResponse({"hub.challenge": hub_challenge})
+    else:
+        return JsonResponse(status=403, data={"error": "Verification failed"})
+
+
+def handle_event(request):
+    """Handles the POST request for activity updates from Strava."""
+    event_data = json.loads(request.body)
+    event_type = event_data.get("aspect_type")
+    object_type = event_data.get("object_type")
+    activity_id = event_data["object_id"]
+    logging.info(f"Received event: {event_type}")
+    if (object_type == "activity") and (event_type == "create"):
+        user = User.objects.filter(
+            stravauser__athlete_id=event_data["owner_id"]
+        ).first()
+        update_activity_name(id=activity_id, user=user)
+
+    return JsonResponse(status=200, data={"status": "Event received"})
 
 
 def strava_login(request):
@@ -144,9 +150,6 @@ def strava_callback(request):
     logging.info("Strava callback")
     logging.info(token_data)
     user_data = token_data["athlete"]
-    access_token = token_data["access_token"]
-    refresh_token = token_data["refresh_token"]
-    expires_at = timezone.datetime.fromtimestamp(token_data["expires_at"])
 
     user, created = User.objects.get_or_create(
         username=user_data["username"],
@@ -155,13 +158,16 @@ def strava_callback(request):
             "last_name": user_data["lastname"],
         },
     )
+    StravaUser.objects.update_or_create(
+        user=user, defaults={"athlete_id": user_data["id"]}
+    )
 
     Token.objects.update_or_create(
         user=user,
         defaults={
-            "access_token": access_token,
-            "refresh_token": refresh_token,
-            "expires_at": expires_at,
+            "access_token": token_data["access_token"],
+            "refresh_token": token_data["refresh_token"],
+            "expires_at": timezone.datetime.fromtimestamp(token_data["expires_at"]),
         },
     )
 
@@ -187,8 +193,9 @@ def login_view(request):
     if request.user.is_authenticated:  # Redirect if already logged in.
         return redirect("titles:index")
 
-    # TODO: only show my stuff
-    latest_strava_title_list = Title.objects.all().order_by("-created_at")[:5]
+    latest_strava_title_list = Title.objects.filter(
+        user__username="rhartong-redden"
+    ).order_by("-created_at")[:5]
 
     context = {
         "form": TitleForm(),

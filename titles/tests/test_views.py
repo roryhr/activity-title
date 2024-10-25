@@ -5,13 +5,20 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 
-from titles.views import strava_webhook
+from titles.models import StravaUser
+from titles.views import strava_webhook, handle_event
 
 
 class WebhookTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.webhook_url = reverse("titles:strava_webhook")
+        self.factory = RequestFactory()
+        self.mock_user = User.objects.create_user(username="testuser")
+        self.athlete_id = 123456
+        self.mock_strava_user = StravaUser.objects.create(
+            user=self.mock_user, athlete_id=self.athlete_id
+        )
 
     @patch("titles.views.update_activity_name")
     def test_webhook_update_event(self, mock_update_activity_name):
@@ -33,47 +40,21 @@ class WebhookTestCase(TestCase):
         mock_update_activity_name.assert_not_called()
 
     @patch("titles.views.update_activity_name")
-    def test_webhook_create_event(self, mock_update_activity_name):
+    def test_handle_create_event(self, mock_update_activity_name):
         event_id = 1234567890
         payload = {
             "aspect_type": "create",
             "event_time": 1549560669,
             "object_id": event_id,
             "object_type": "activity",
+            "owner_id": self.athlete_id,
         }
-        mock_user = User.objects.create_user(username="testuser")
-        factory = RequestFactory()
-        request = factory.post(
+        request = self.factory.post(
             self.webhook_url, data=json.dumps(payload), content_type="application/json"
         )
-        request.user = mock_user
-        response = strava_webhook(request)
+        response = handle_event(request)
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {"status": "Event received"})
-        mock_update_activity_name.assert_called_once_with(id=event_id, user=mock_user)
-
-    def test_anonymous_user_webhook(self):
-        # Create a request with no logged-in user (AnonymousUser)
-        request = self.client.post(
-            self.webhook_url,
-            data={
-                "aspect_type": "create",
-                "event_time": 1729814943,
-                "object_id": 12737779754,
-                "object_type": "activity",
-                "owner_id": 23193264,
-                "subscription_id": 266786,
-                "updates": {},
-            },
-            content_type="application/json",
+        mock_update_activity_name.assert_called_once_with(
+            id=event_id, user=self.mock_user
         )
-
-        request.user = AnonymousUser()
-
-        # Call the view and check for the expected error
-        response = your_view(request)
-
-        # Assert that the response is an error
-        self.assertEqual(
-            response.status_code, 500
-        )  # Assuming the error returns a 500 status code
