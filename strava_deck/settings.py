@@ -38,8 +38,8 @@ ALLOWED_HOSTS = [
     "strava-deck.fly.dev",
     "127.0.0.1",
     "localhost",
-    "stravadeck.com",
     "activitytitle.com",
+    "www.activitytitle.com",
 ]
 
 
@@ -64,6 +64,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "titles.middleware.BlockWordPressPathsMiddleware",
+    "titles.middleware.CanonicalDomainMiddleware",
 ]
 
 ROOT_URLCONF = "strava_deck.urls"
