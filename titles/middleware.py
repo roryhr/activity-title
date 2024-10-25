@@ -25,7 +25,7 @@ class CanonicalDomainMiddleware:
 
     def __call__(self, request):
         host = request.get_host()
-        if host == "www.activitytitle.com":
+        if host in ["www.activitytitle.com", "m.activitytitle.com"]:
             return HttpResponsePermanentRedirect(
                 f"https://activitytitle.com{request.path}"
             )
