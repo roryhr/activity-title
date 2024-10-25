@@ -8,6 +8,11 @@ from django.utils import timezone
 from strava_deck import settings
 
 
+class StravaUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    athlete_id = models.IntegerField(unique=True, null=False, blank=False)
+
+
 class Title(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)

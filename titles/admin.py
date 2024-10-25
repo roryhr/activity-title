@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from .models import Title
+from .models import Title, StravaUser
 
 
 # Step 1: Create a custom form with Textarea for 'title'
@@ -14,9 +14,14 @@ class TitleForm(forms.ModelForm):
         }
 
 
-# Step 2: Register the Title model with the custom form
 class TitleAdmin(admin.ModelAdmin):
     form = TitleForm
+
+
+@admin.register(StravaUser)
+class StravaUserAdmin(admin.ModelAdmin):
+    list_display = ("user", "athlete_id")  # Fields to display in the admin list view
+    search_fields = ("user__username", "athlete_id")
 
 
 admin.site.register(Title, TitleAdmin)

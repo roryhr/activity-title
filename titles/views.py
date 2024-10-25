@@ -76,9 +76,11 @@ def strava_webhook(request):
         logging.info(f"Received event: {event_type}")
         logging.info(event_data)
         logging.info(request.user)
-        # TODO: Figure out user from the event_data instead of request
         if object_type == "activity" and event_type == "create":
-            update_activity_name(id=activity_id, user=request.user)
+            user = User.objects.filter(
+                stravauser__athlete_id=event_data["owner_id"]
+            ).first()
+            update_activity_name(id=activity_id, user=user)
         return JsonResponse(status=200, data={"status": "Event received"})
 
     return JsonResponse(status=405, data={"error": "Method not allowed"})

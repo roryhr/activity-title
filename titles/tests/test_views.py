@@ -51,3 +51,29 @@ class WebhookTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertJSONEqual(response.content, {"status": "Event received"})
         mock_update_activity_name.assert_called_once_with(id=event_id, user=mock_user)
+
+    def test_anonymous_user_webhook(self):
+        # Create a request with no logged-in user (AnonymousUser)
+        request = self.client.post(
+            self.webhook_url,
+            data={
+                "aspect_type": "create",
+                "event_time": 1729814943,
+                "object_id": 12737779754,
+                "object_type": "activity",
+                "owner_id": 23193264,
+                "subscription_id": 266786,
+                "updates": {},
+            },
+            content_type="application/json",
+        )
+
+        request.user = AnonymousUser()
+
+        # Call the view and check for the expected error
+        response = your_view(request)
+
+        # Assert that the response is an error
+        self.assertEqual(
+            response.status_code, 500
+        )  # Assuming the error returns a 500 status code
