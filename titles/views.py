@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
@@ -151,8 +152,12 @@ def strava_callback(request):
     logging.info(token_data)
     user_data = token_data["athlete"]
 
+    if not user_data["username"]:
+        username = f"user_{get_random_string(8)}"
+    else:
+        username = user_data["username"]
     user, created = User.objects.get_or_create(
-        username=user_data["username"],
+        username=username,
         defaults={
             "first_name": user_data["firstname"],
             "last_name": user_data["lastname"],
