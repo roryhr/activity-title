@@ -38,6 +38,7 @@ ALLOWED_HOSTS = [
     "strava-deck.fly.dev",
     "127.0.0.1",
     "localhost",
+    "stravadeck.com",
     "activitytitle.com",
     "m.activitytitle.com",
     "www.activitytitle.com",
