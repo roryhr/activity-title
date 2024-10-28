@@ -6,6 +6,8 @@ That's it!
 
 ## Development Notes
 
+Python 3.11
+
 ```
 Python 3.11
 Django 5.0.7

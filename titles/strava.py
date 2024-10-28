@@ -28,13 +28,14 @@ def update_activity_name(id, user):
         .order_by("-created_at")
         .first()
     )
-    logging.info(f"Attempting to update activity id: {id}")
+
+    logging.info(f"Attempting to update activity id to title: {id}, {t.title}")
     response = requests.put(
         url=f"https://www.strava.com/api/v3/activities/{id}",
         headers={"Authorization": f"Bearer {get_token(user)}"},
         data={"name": t.title},
     )
-
+    logging.info(f"Activities API response {response.content}")
     if response.status_code == 200:
         logging.info("Activity name updated successfully!")
         t.used_at = timezone.now()
