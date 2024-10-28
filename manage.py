@@ -15,9 +15,6 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    from IPython import embed
-
-    embed(using=False, banner1="")
     execute_from_command_line(sys.argv)
 
 

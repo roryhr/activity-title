@@ -154,3 +154,4 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 LOGIN_URL = "/login/"
+SHELL = "ipython"
