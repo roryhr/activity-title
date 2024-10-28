@@ -152,19 +152,19 @@ def strava_callback(request):
     logging.info(token_data)
     user_data = token_data["athlete"]
 
+    strava_user, _ = StravaUser.objects.get_or_create(athlete_id=user_data["id"])
     if not user_data["username"]:
         username = f"user_{get_random_string(8)}"
     else:
         username = user_data["username"]
-    user, created = User.objects.get_or_create(
-        username=username,
+
+    user, _ = User.objects.get_or_create(
+        stravauser=strava_user,
         defaults={
+            "username": username,
             "first_name": user_data["firstname"],
             "last_name": user_data["lastname"],
         },
-    )
-    StravaUser.objects.update_or_create(
-        user=user, defaults={"athlete_id": user_data["id"]}
     )
 
     Token.objects.update_or_create(
