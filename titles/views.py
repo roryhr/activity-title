@@ -40,6 +40,7 @@ def index(request):
         "latest_strava_title_list": Title.objects.filter(user=request.user).order_by(
             "-created_at"
         )[:5],
+        "DEBUG": settings.DEBUG,
     }
     return render(request, "titles/index.html", context)
 
@@ -205,5 +206,6 @@ def login_view(request):
     context = {
         "form": TitleForm(),
         "latest_strava_title_list": latest_strava_title_list,
+        "DEBUG": settings.DEBUG,
     }
     return render(request, "titles/login.html", context)
