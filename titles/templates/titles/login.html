@@ -14,10 +14,10 @@
         {{ form.as_p }}
         <button>Create</button>
     </form>
-    <h2>Demo Data</h2>
-    <p>Here you'll see what you've created and if it's been linked to a Strava activity.</p>
+    <h2>List of Titles</h2>
+    <p>This is demo data. Once logged in you'll be able to create your own that only you can see.</p>
     <ul>
-        {% for title in latest_strava_title_list %}
+        {% for title in titles %}
         <li>
             <a href="{% url 'titles:detail' title.id %}" class="title-link">{{ title.title|linebreaksbr }}</a>
             <p class="created-at">Created at: {{ title.created_at }}</p>

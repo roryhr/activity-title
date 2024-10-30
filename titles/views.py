@@ -199,13 +199,13 @@ def login_view(request):
     if request.user.is_authenticated:  # Redirect if already logged in.
         return redirect("titles:index")
 
-    latest_strava_title_list = Title.objects.filter(
-        user__username="rhartong-redden"
-    ).order_by("-created_at")[:5]
+    first_five = Title.objects.filter(user__username="rhartong-redden").order_by(
+        "created_at"
+    )[:5]
 
     context = {
         "form": TitleForm(),
-        "latest_strava_title_list": latest_strava_title_list,
+        "titles": first_five,
         "DEBUG": settings.DEBUG,
     }
     return render(request, "titles/login.html", context)
