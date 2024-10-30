@@ -205,7 +205,7 @@ def login_view(request):
 
     context = {
         "form": TitleForm(),
-        "titles": first_five,
+        "titles": reversed(first_five),
         "DEBUG": settings.DEBUG,
     }
     return render(request, "titles/login.html", context)
