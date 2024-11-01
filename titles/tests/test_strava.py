@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.utils import timezone
 
-from titles.models import Title, Token, Activity
-from titles.strava import update_activity_name
+from titles.models import Title, Token, Activity, StravaUser
+from titles.strava import update_activity_name, create_user
 
 
 class StravaTests(TestCase):
@@ -54,3 +54,87 @@ class StravaTests(TestCase):
         self.title.refresh_from_db()
         self.assertIsNone(self.title.used_at)
         self.assertEqual(Activity.objects.count(), 0)
+
+
+class CreateUserTests(TestCase):
+
+    def test_create_user_with_username(self):
+        token_data = {
+            "athlete": {
+                "id": 1,
+                "username": "testuser",
+                "firstname": "Test",
+                "lastname": "User",
+            },
+            "access_token": "dummy_access_token",
+            "refresh_token": "dummy_refresh_token",
+            "expires_at": timezone.now().timestamp() + 3600,  # 1 hour in the future
+        }
+
+        user = create_user(token_data)
+
+        self.assertEqual(user.username, "testuser")
+        self.assertEqual(user.first_name, "Test")
+        self.assertEqual(user.last_name, "User")
+
+        strava_user = StravaUser.objects.get(athlete_id=1)
+        self.assertEqual(strava_user.user, user)
+
+        token = Token.objects.get(user=user)
+        self.assertEqual(token.access_token, "dummy_access_token")
+        self.assertEqual(token.refresh_token, "dummy_refresh_token")
+
+    def test_create_user_without_username(self):
+        token_data = {
+            "athlete": {
+                "id": 2,
+                "username": None,  # No username provided
+                "firstname": "Another",
+                "lastname": "User",
+            },
+            "access_token": "dummy_access_token_2",
+            "refresh_token": "dummy_refresh_token_2",
+            "expires_at": timezone.now().timestamp() + 3600,  # 1 hour in the future
+        }
+
+        user = create_user(token_data)
+
+        self.assertEqual(user.username, "2")  # Username should default to athlete ID
+        self.assertEqual(user.first_name, "Another")
+        self.assertEqual(user.last_name, "User")
+
+        strava_user = StravaUser.objects.get(athlete_id=2)
+        self.assertEqual(strava_user.user, user)
+
+        token = Token.objects.get(user=user)
+        self.assertEqual(token.access_token, "dummy_access_token_2")
+        self.assertEqual(token.refresh_token, "dummy_refresh_token_2")
+
+    def test_create_user_existing_user(self):
+        existing_user = User.objects.create_user(
+            username="existinguser", first_name="Existing", last_name="User"
+        )
+
+        token_data = {
+            "athlete": {
+                "id": 3,
+                "username": "existinguser",  # Same username as existing user
+                "firstname": "Existing",
+                "lastname": "User",
+            },
+            "access_token": "dummy_access_token_3",
+            "refresh_token": "dummy_refresh_token_3",
+            "expires_at": timezone.now().timestamp() + 3600,  # 1 hour in the future
+        }
+
+        user = create_user(token_data)
+
+        self.assertEqual(user, existing_user)  # Should return the existing user
+
+        # Check if a StravaUser is created or updated correctly
+        strava_user = StravaUser.objects.get(athlete_id=3)
+        self.assertEqual(strava_user.user, existing_user)
+
+        token = Token.objects.get(user=existing_user)
+        self.assertEqual(token.access_token, "dummy_access_token_3")
+        self.assertEqual(token.refresh_token, "dummy_refresh_token_3")

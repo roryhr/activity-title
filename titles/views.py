@@ -13,11 +13,10 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.utils.crypto import get_random_string
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from titles.strava import update_activity_name
+from titles.strava import update_activity_name, create_user
 from .forms import TitleForm
 from .models import Title, Token, StravaUser
 
@@ -148,34 +147,7 @@ def strava_callback(request):
         logging.info("NO success. Error in OAuth process")
         return redirect("titles:index")
 
-    token_data = response.json()
-    logging.info("Strava callback")
-    logging.info(token_data)
-    user_data = token_data["athlete"]
-
-    strava_user, _ = StravaUser.objects.get_or_create(athlete_id=user_data["id"])
-    if not user_data["username"]:
-        username = f"user_{get_random_string(8)}"
-    else:
-        username = user_data["username"]
-
-    user, _ = User.objects.get_or_create(
-        stravauser=strava_user,
-        defaults={
-            "username": username,
-            "first_name": user_data["firstname"],
-            "last_name": user_data["lastname"],
-        },
-    )
-
-    Token.objects.update_or_create(
-        user=user,
-        defaults={
-            "access_token": token_data["access_token"],
-            "refresh_token": token_data["refresh_token"],
-            "expires_at": timezone.datetime.fromtimestamp(token_data["expires_at"]),
-        },
-    )
+    user = create_user(token_data=response.json())
 
     login(request, user)
     logging.info("SUCCESS!")
