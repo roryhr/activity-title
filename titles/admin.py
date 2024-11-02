@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 
-from .models import Title, StravaUser
+from .models import Activity, Title, StravaUser
 
 
 # Step 1: Create a custom form with Textarea for 'title'
@@ -25,3 +25,4 @@ class StravaUserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Title, TitleAdmin)
+admin.site.register(Activity)

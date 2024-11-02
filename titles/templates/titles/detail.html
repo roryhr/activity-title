@@ -14,9 +14,17 @@ Activity Title - Detail
     <h2>Related Activities:</h2>
     <ul>
         {% for activity in title.activity_set.all %}
-        <li>{{ activity.activity_id }}</li>
+            <li>
+                {% if activity.activity_id %}
+                    <a href="https://www.strava.com/activities/{{ activity.activity_id }}" target="_blank">
+                        Strava Activity #{{ activity.activity_id }}
+                    </a>
+                {% else %}
+                    No Strava activity linked.
+                {% endif %}
+            </li>
         {% empty %}
-        <li>No related activities found.</li>
+            <li>No related activities found.</li>
         {% endfor %}
     </ul>
 

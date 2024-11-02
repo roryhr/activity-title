@@ -12,13 +12,12 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.utils import timezone
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
 from titles.strava import update_activity_name, create_user
 from .forms import TitleForm
-from .models import Title, Token, StravaUser
+from .models import Title
 
 
 @login_required
