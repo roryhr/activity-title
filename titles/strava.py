@@ -2,6 +2,7 @@ import logging
 
 import requests
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.utils import timezone
 
 from titles.models import Token, Title, StravaUser
@@ -40,8 +41,19 @@ def update_activity_name(id, user):
     if response.status_code == 200:
         logging.info("Activity name updated successfully!")
         t.used_at = timezone.now()
-        t.activity_set.create(activity_id=id)
+        t.activity_set.get_or_create(activity_id=id)
         t.save()
+
+        try:
+            activity, created = t.activity_set.get_or_create(activity_id=id)
+            if created:
+                logging.info(f"New activity created with ID {id}")
+            else:
+                logging.info(f"Activity with ID {id} already exists")
+        except IntegrityError:
+            logging.error(
+                f"Failed to create or find existing activity with ID {id} due to IntegrityError"
+            )
 
 
 def create_user(token_data):
