@@ -9,6 +9,8 @@ from titles.strava import update_activity_name, create_user
 
 
 class StravaTests(TestCase):
+    TITLE_NAME = "Test Title"
+
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(
@@ -20,22 +22,22 @@ class StravaTests(TestCase):
             refresh_token="test_refresh_token",
             expires_at=timezone.now() + timezone.timedelta(days=1),
         )
-        self.title = Title.objects.create(user=self.user, title="Test Title")
+        self.title = Title.objects.create(user=self.user, title=self.TITLE_NAME)
 
     @patch("titles.strava.requests.put")
-    def test_update_activity_success(self, mock_put):
+    def test_update_activity_name_success(self, mock_put):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_put.return_value = mock_response
 
-        activity_id = 12345
+        activity_id = 12345678
 
-        update_activity_name(activity_id, self.user)
+        update_activity_name(id=activity_id, user=self.user)
 
         mock_put.assert_called_with(
             url=f"https://www.strava.com/api/v3/activities/{activity_id}",
             headers={"Authorization": f"Bearer test_access_token"},
-            data={"name": "Test Title"},
+            data={"name": self.TITLE_NAME},
         )
         self.title.refresh_from_db()
         self.assertIsNotNone(self.title.used_at)
@@ -47,7 +49,7 @@ class StravaTests(TestCase):
         mock_response.status_code = 400
         mock_put.return_value = mock_response
 
-        activity_id = 12345
+        activity_id = 987654321
 
         update_activity_name(id=activity_id, user=self.user)
 
@@ -68,7 +70,7 @@ class CreateUserTests(TestCase):
             },
             "access_token": "dummy_access_token",
             "refresh_token": "dummy_refresh_token",
-            "expires_at": timezone.now().timestamp() + 3600,  # 1 hour in the future
+            "expires_at": timezone.now().timestamp() + 3600,
         }
 
         user = create_user(token_data)
@@ -124,7 +126,7 @@ class CreateUserTests(TestCase):
             },
             "access_token": "dummy_access_token_3",
             "refresh_token": "dummy_refresh_token_3",
-            "expires_at": timezone.now().timestamp() + 3600,  # 1 hour in the future
+            "expires_at": timezone.now().timestamp() + 3600,
         }
 
         user = create_user(token_data)

@@ -21,6 +21,7 @@ def update_activity_name(id, user):
     Parameters
     ----------
     id : int
+        Activity id to change
     user : django.contrib.auth.models.User
     """
     logging.info(f"Update activity name {id}, {user}")
@@ -41,11 +42,10 @@ def update_activity_name(id, user):
     if response.status_code == 200:
         logging.info("Activity name updated successfully!")
         t.used_at = timezone.now()
-        t.activity_set.get_or_create(activity_id=id)
         t.save()
 
         try:
-            activity, created = t.activity_set.get_or_create(activity_id=id)
+            _, created = t.activity_set.get_or_create(activity_id=id)
             if created:
                 logging.info(f"New activity created with ID {id}")
             else:
@@ -88,7 +88,7 @@ def create_user(token_data):
     KeyError
         If any of the expected keys are missing from `token_data` or `user_data`.
     """
-    logging.info("Strava callback")
+    logging.info("Create user")
     logging.info(token_data)
     user_data = token_data["athlete"]
     athlete_id = user_data["id"]
@@ -106,9 +106,7 @@ def create_user(token_data):
             "last_name": user_data["lastname"],
         },
     )
-    strava_user, _ = StravaUser.objects.get_or_create(
-        athlete_id=user_data["id"], user=user
-    )
+    StravaUser.objects.get_or_create(athlete_id=athlete_id, user=user)
 
     Token.objects.update_or_create(
         user=user,
@@ -118,4 +116,5 @@ def create_user(token_data):
             "expires_at": timezone.datetime.fromtimestamp(token_data["expires_at"]),
         },
     )
+
     return user
