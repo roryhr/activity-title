@@ -5,35 +5,41 @@ Activity Title - Detail
 {% endblock %}
 
 {% block content %}
-<main>
-    <h1>{{ title.title|linebreaksbr }}</h1>
-    <p>Created at {{ title.created_at }}</p>
+{% load static %}
+<h1>{{ title.title|linebreaksbr }}</h1>
+<p class="created-at">Created at {{ title.created_at }}</p>
 
-    {% if title.used_at %}
-    <p>Linked to Strava on {{ title.used_at }}</p>
-    {% endif %}
+{% if title.used_at %}
+<p class="created-at">Linked to Strava on {{ title.used_at }}</p>
+{% endif %}
 
-    <h2>Related Activities</h2>
-    <ul>
-        {% for activity in title.activity_set.all %}
-        <li>
-            {% if activity.activity_id %}
-            <a href="https://www.strava.com/activities/{{ activity.activity_id }}" target="_blank">
-                Strava Activity #{{ activity.activity_id }}
-            </a>
-            {% else %}
-            No Strava activity linked.
-            {% endif %}
-        </li>
-        {% empty %}
-        <p>Once this title is synced to Strava you'll see a link to the activity with this name.</p>
-        {% endfor %}
-    </ul>
+<h2>Related Activities</h2>
+<ul class="titles">
+    {% for activity in title.activity_set.all %}
+    <li>
+        {% if activity.activity_id %}
+        <a href="https://www.strava.com/activities/{{ activity.activity_id }}" target="_blank">
+            Strava Activity #{{ activity.activity_id }}
+        </a>
+        {% endif %}
+    </li>
+    {% empty %}
+    <p>Once this title is synced to Strava you'll see a link to the activity with this name.</p>
+    {% endfor %}
+</ul>
 
-    <form method="post" action="{% url 'titles:delete' title.id %}">
+<div class="button-container">
+    <a href="{% url 'titles:index' %}" class="btn-back">← Back to Index</a>
+
+    <form method="post" action="{% url 'titles:delete' title.id %}" onsubmit="return confirmDelete()">
         {% csrf_token %}
-        <button type="submit">Delete</button>
+        <button type="submit" class="btn-delete">Delete</button>
     </form>
+</div>
 
-</main>
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this title?");
+    }
+</script>
 {% endblock %}
