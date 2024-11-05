@@ -6,25 +6,27 @@ Activity Title - Detail
 
 {% block content %}
 <main>
-    <h1>{{ title.title }}</h1>
-    <p>Created at: {{ title.created_at }}</p>
-    <p>Last updated: {{ title.updated_at }}</p>
-    <p>Linked to Strava Activity on: {{ title.used_at }}</p>
+    <h1>{{ title.title|linebreaksbr }}</h1>
+    <p>Created at {{ title.created_at }}</p>
 
-    <h2>Related Activities:</h2>
+    {% if title.used_at %}
+    <p>Linked to Strava on {{ title.used_at }}</p>
+    {% endif %}
+
+    <h2>Related Activities</h2>
     <ul>
         {% for activity in title.activity_set.all %}
-            <li>
-                {% if activity.activity_id %}
-                    <a href="https://www.strava.com/activities/{{ activity.activity_id }}" target="_blank">
-                        Strava Activity #{{ activity.activity_id }}
-                    </a>
-                {% else %}
-                    No Strava activity linked.
-                {% endif %}
-            </li>
+        <li>
+            {% if activity.activity_id %}
+            <a href="https://www.strava.com/activities/{{ activity.activity_id }}" target="_blank">
+                Strava Activity #{{ activity.activity_id }}
+            </a>
+            {% else %}
+            No Strava activity linked.
+            {% endif %}
+        </li>
         {% empty %}
-            <li>No related activities found.</li>
+        <p>Once this title is synced to Strava you'll see a link to the activity with this name.</p>
         {% endfor %}
     </ul>
 
