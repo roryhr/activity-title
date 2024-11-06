@@ -29,7 +29,7 @@ def update_activity_name(id, user):
         Title.objects.filter(user=user)
         .filter(used_at__isnull=True)
         .order_by("-created_at")
-        .first()
+        .last()
     )
 
     logging.info(f"Attempting to update activity id to title: {id}, {t.title}")

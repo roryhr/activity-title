@@ -35,7 +35,14 @@ Activity Title - Home
         <li>
             <a href="{% url 'titles:detail' title.id %}" class="title-link">{{ title.title|linebreaksbr }}</a>
             <p class="created-at">Created at: {{ title.created_at }}</p>
+            {% if title.used_at %}
             <p class="created-at">Used at: {{ title.used_at }}</p>
+            {% endif %}
+
+            {% if title == queued_title %}
+            <span style="color: gold;">★</span>
+            <small>(Queued next to sync) <br></small>
+            {% endif %}
         </li>
         {% empty %}
         <li>No titles are available.</li>
