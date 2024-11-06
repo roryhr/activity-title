@@ -120,7 +120,7 @@ def strava_mobile_login(request):
         "scope": "activity:read_all,activity:write",
         "approval_prompt": "auto",
     }
-
+    # let appOAuthUrlStravaScheme = URL(string: "strava://oauth/mobile/authorize?client_id=1234321&redirect_uri=YourApp%3A%2F%2Fwww.yourapp.com%2Fen-US&response_type=code&approval_prompt=auto&scope=activity%3Awrite%2Cread&state=test")!
     query_string = urlencode(params)
     url = urlunparse(
         ("https", "www.strava.com", "/oauth/mobile/authorize", "", query_string, "")
@@ -167,7 +167,7 @@ def faq(request):
 
 
 def login_view(request):
-    if request.user.is_authenticated:  # Redirect if already logged in.
+    if request.user.is_authenticated:
         return redirect("titles:index")
 
     first_five = Title.objects.filter(user__username="rhartong-redden").order_by(
