@@ -31,7 +31,7 @@ Activity Title - Home
     </form>
     <h2>List of Titles</h2>
     <ul>
-        {% for title in latest_strava_title_list %}
+        {% for title in titles %}
         <li>
             <a href="{% url 'titles:detail' title.id %}" class="title-link">{{ title.title|linebreaksbr }}</a>
             <p class="created-at">Created at: {{ title.created_at }}</p>
@@ -41,6 +41,20 @@ Activity Title - Home
         <li>No titles are available.</li>
         {% endfor %}
     </ul>
+
+    <div class="pagination">
+        {% if titles.has_previous %}
+        <a href="?page=1" class="pagination-link">&laquo; first</a>
+        <a href="?page={{ titles.previous_page_number }}" class="pagination-link">previous</a>
+        {% endif %}
+
+        <span class="page-info">Page {{ titles.number }} of {{ titles.paginator.num_pages }}</span>
+
+        {% if titles.has_next %}
+        <a href="?page={{ titles.next_page_number }}" class="pagination-link">next</a>
+        <a href="?page={{ titles.paginator.num_pages }}" class="pagination-link">last &raquo;</a>
+        {% endif %}
+    </div>
 </section>
 
 <section class="strava-login">

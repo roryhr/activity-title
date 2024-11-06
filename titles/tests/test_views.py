@@ -5,8 +5,66 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 
-from titles.models import StravaUser
-from titles.views import strava_webhook, handle_event
+from titles.models import StravaUser, Title
+from titles.views import handle_event
+
+from django.contrib.auth import get_user_model
+from django.test import TestCase
+from django.urls import reverse
+
+User = get_user_model()
+
+
+class IndexViewPaginationTest(TestCase):
+    def setUp(self):
+        # Set up a user and some titles for testing
+        self.user = User.objects.create_user(username="testuser", password="password")
+        self.client.login(username="testuser", password="password")
+
+        # Create multiple titles for pagination (assuming 10 titles for a page size of 5)
+        self.titles = [
+            Title.objects.create(title=f"Title {i}", user=self.user) for i in range(10)
+        ]
+
+    def test_index_view_pagination_first_page(self):
+        # Access the first page of the index view
+        response = self.client.get(reverse("titles:index"))
+
+        # Check that the response is successful
+        self.assertEqual(response.status_code, 200)
+
+        # Check that only 5 titles are displayed (first page)
+        self.assertEqual(len(response.context["titles"]), 5)
+
+        # Verify the pagination is working as expected
+        self.assertTrue(response.context["titles"].has_next())
+        self.assertFalse(response.context["titles"].has_previous())
+        self.assertEqual(response.context["titles"].number, 1)
+
+    def test_index_view_pagination_second_page(self):
+        # Access the second page of the index view
+        response = self.client.get(reverse("titles:index") + "?page=2")
+
+        # Check that the response is successful
+        self.assertEqual(response.status_code, 200)
+
+        # Check that only 5 titles are displayed (second page)
+        self.assertEqual(len(response.context["titles"]), 5)
+
+        # Verify the pagination is working as expected
+        self.assertFalse(response.context["titles"].has_next())
+        self.assertTrue(response.context["titles"].has_previous())
+        self.assertEqual(response.context["titles"].number, 2)
+
+    def test_index_view_pagination_invalid_page(self):
+        # Access an invalid page number
+        response = self.client.get(reverse("titles:index") + "?page=999")
+
+        # Check that the response redirects to a valid page (e.g., the last page)
+        self.assertEqual(response.status_code, 200)
+
+        # Check that we are on the second page (last page in this case)
+        self.assertEqual(response.context["titles"].number, 2)
 
 
 class WebhookTestCase(TestCase):

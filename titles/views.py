@@ -20,6 +20,9 @@ from .forms import TitleForm
 from .models import Title
 
 
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+
 @login_required
 def index(request):
     if request.method == "POST":
@@ -33,11 +36,24 @@ def index(request):
     else:
         form = TitleForm()
 
+    title_list = Title.objects.filter(user=request.user).order_by("-created_at")
+
+    # Set up pagination with 5 titles per page
+    paginator = Paginator(title_list, 5)
+    page = request.GET.get("page")
+
+    try:
+        titles = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        titles = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range, deliver last page of results.
+        titles = paginator.page(paginator.num_pages)
+
     context = {
         "form": form,
-        "latest_strava_title_list": Title.objects.filter(user=request.user).order_by(
-            "-created_at"
-        )[:5],
+        "titles": titles,
         "DEBUG": settings.DEBUG,
     }
     return render(request, "titles/index.html", context)
