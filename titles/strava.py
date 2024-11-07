@@ -31,6 +31,9 @@ def update_activity_name(id, user):
         .order_by("-created_at")
         .last()
     )
+    if not t:
+        logging.info("No title to use")
+        return
 
     logging.info(f"Attempting to update activity id to title: {id}, {t.title}")
     response = requests.put(
