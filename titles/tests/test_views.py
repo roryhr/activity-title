@@ -5,8 +5,9 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 
+from strava_deck import settings
 from titles.models import StravaUser, Title
-from titles.views import handle_event
+from titles.views import handle_event, strava_mobile_login
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -17,17 +18,14 @@ User = get_user_model()
 
 class IndexViewPaginationTest(TestCase):
     def setUp(self):
-        # Set up a user and some titles for testing
         self.user = User.objects.create_user(username="testuser", password="password")
         self.client.login(username="testuser", password="password")
 
-        # Create multiple titles for pagination (assuming 10 titles for a page size of 5)
         self.titles = [
             Title.objects.create(title=f"Title {i}", user=self.user) for i in range(10)
         ]
 
     def test_index_view_pagination_first_page(self):
-        # Access the first page of the index view
         response = self.client.get(reverse("titles:index"))
 
         # Check that the response is successful
@@ -116,3 +114,54 @@ class WebhookTestCase(TestCase):
         mock_update_activity_name.assert_called_once_with(
             id=event_id, user=self.mock_user
         )
+
+
+class StravaMobileLoginTests(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        settings.STRAVA_CLIENT_ID = "mock_client_id"
+
+    @patch("titles.views.settings", settings)
+    def test_ios_redirect(self):
+        request = self.create_mock_request(
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 16_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko)"
+        )
+        response = strava_mobile_login(request)
+
+        expected_url = (
+            "strava://oauth/mobile/authorize?"
+            "client_id=mock_client_id&response_type=code&"
+            "redirect_uri=http%3A%2F%2Ftestserver%2Fstrava%2Fcallback&"
+            "scope=activity%3Aread_all%2Cactivity%3Awrite&approval_prompt=auto"
+        )
+        self.assertRedirects(
+            response,
+            expected_url=expected_url,
+            status_code=302,
+            fetch_redirect_response=False,
+        )
+
+    @patch("titles.views.settings", settings)
+    def test_android_redirect(self):
+        request = self.create_mock_request(
+            "Mozilla/5.0 (Linux; Android 13; SM-G998B) AppleWebKit/537.36 ..."
+        )
+        response = strava_mobile_login(request)
+        expected_url = (
+            "https://www.strava.com/oauth/mobile/authorize?"
+            "client_id=mock_client_id&response_type=code&"
+            "redirect_uri=http%3A%2F%2Ftestserver%2Fstrava%2Fcallback&"
+            "scope=activity%3Aread_all%2Cactivity%3Awrite&approval_prompt=auto"
+        )
+        self.assertRedirects(
+            response,
+            expected_url=expected_url,
+            status_code=302,
+            fetch_redirect_response=False,
+        )
+
+    def create_mock_request(self, user_agent):
+        request = self.factory.get(reverse("titles:strava_mobile_login"))
+        request.headers = {"User-Agent": user_agent}
+        return request

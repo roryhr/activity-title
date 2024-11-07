@@ -9,7 +9,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import generic
@@ -21,6 +21,10 @@ from .models import Title
 
 
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+
+class UnsafeRedirect(HttpResponseRedirect):
+    allowed_schemes = ["http", "https", "strava"]
 
 
 @login_required
@@ -131,7 +135,7 @@ def strava_login(request):
 
 
 def strava_mobile_login(request):
-    """Connect with Strava button"""
+    """Connect with Strava button mobile"""
     redirect_uri = request.build_absolute_uri("/strava/callback")
     params = {
         "client_id": settings.STRAVA_CLIENT_ID,
@@ -140,12 +144,16 @@ def strava_mobile_login(request):
         "scope": "activity:read_all,activity:write",
         "approval_prompt": "auto",
     }
-    # let appOAuthUrlStravaScheme = URL(string: "strava://oauth/mobile/authorize?client_id=1234321&redirect_uri=YourApp%3A%2F%2Fwww.yourapp.com%2Fen-US&response_type=code&approval_prompt=auto&scope=activity%3Awrite%2Cread&state=test")!
     query_string = urlencode(params)
-    url = urlunparse(
+
+    agent = request.headers.get("User-Agent").lower()
+    if "iphone" in agent or "ipad" in agent:
+        return UnsafeRedirect(f"strava://oauth/mobile/authorize?{query_string}")
+
+    android = urlunparse(
         ("https", "www.strava.com", "/oauth/mobile/authorize", "", query_string, "")
     )
-    return redirect(url)
+    return redirect(android)
 
 
 def strava_callback(request):
