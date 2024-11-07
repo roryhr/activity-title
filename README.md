@@ -25,3 +25,10 @@ Deployed to http://strava-deck.fly.dev/
 python manage.py collectstatic
 python manage.py test
 ```
+
+
+# TODOS
+
+1. User management panel where you can delete your account. Log out.
+2. Check what privedges were given in the OAuth flow
+3. Security 
