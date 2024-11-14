@@ -1,17 +1,15 @@
 import json
 from unittest.mock import patch
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from django.test import TestCase, Client, RequestFactory
+from django.test import Client, RequestFactory
+from django.test import TestCase
 from django.urls import reverse
 
 from strava_deck import settings
 from titles.models import StravaUser, Title
 from titles.views import handle_event, strava_mobile_login
-
-from django.contrib.auth import get_user_model
-from django.test import TestCase
-from django.urls import reverse
 
 User = get_user_model()
 

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.utils import timezone
 
-from titles.models import Token, Title, StravaUser
+from titles.models import Token, Title, StravaUser, Activity
 
 
 def get_token(user):
@@ -25,6 +25,11 @@ def update_activity_name(id, user):
     user : django.contrib.auth.models.User
     """
     logging.info(f"Update activity name {id}, {user}")
+
+    if Activity.objects.filter(activity_id=id, title__isnull=False).exists():
+        logging.info("Activity already handled")
+        return
+
     t = (
         Title.objects.filter(user=user)
         .filter(used_at__isnull=True)

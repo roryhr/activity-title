@@ -57,6 +57,39 @@ class StravaTests(TestCase):
         self.assertIsNone(self.title.used_at)
         self.assertEqual(Activity.objects.count(), 0)
 
+    @patch("titles.strava.requests.put")
+    def test_update_activity_name_called_once_per_activity(self, mock_put):
+        """Test that calling update_activity_name twice with the same activity_id
+        only sets the title once and uses only one Title instance."""
+
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_put.return_value = mock_response
+
+        activity_id = 12345678
+
+        # Call update_activity_name twice with the same activity_id
+        update_activity_name(id=activity_id, user=self.user)
+        update_activity_name(id=activity_id, user=self.user)
+
+        # Check that only one Activity object was created
+        self.assertEqual(Activity.objects.filter(activity_id=activity_id).count(), 1)
+
+        # Verify the Activity is associated with the correct title and used only once
+        activity = Activity.objects.get(activity_id=activity_id)
+        self.assertEqual(activity.title, self.title)
+
+        # Confirm that only one request was made to Strava's API
+        mock_put.assert_called_once_with(
+            url=f"https://www.strava.com/api/v3/activities/{activity_id}",
+            headers={"Authorization": f"Bearer test_access_token"},
+            data={"name": self.TITLE_NAME},
+        )
+
+        # Verify that the title's `used_at` field is set (indicating it was used)
+        self.title.refresh_from_db()
+        self.assertIsNotNone(self.title.used_at)
+
 
 class CreateUserTests(TestCase):
 
