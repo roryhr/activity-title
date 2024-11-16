@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 from urllib.parse import urlencode, urlunparse
 
 import requests
@@ -107,12 +108,13 @@ def handle_event(request):
     object_type = event_data.get("object_type")
     activity_id = event_data["object_id"]
     logging.info(f"Received event: {event_type}")
+    start = time.time()
     if (object_type == "activity") and (event_type == "create"):
         user = User.objects.filter(
             stravauser__athlete_id=event_data["owner_id"]
         ).first()
         update_activity_name(id=activity_id, user=user)
-
+    logging.info(f"Event response: {event_type}, time: {time.time() - start}")
     return JsonResponse(status=200, data={"status": "Event received"})
 
 
