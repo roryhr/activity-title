@@ -9,41 +9,44 @@ About Activity Title - Streamline Your Strava Activities
 
 <section class="about-intro">
     <p>
-        Tired of generic activity titles like "Afternoon Run"? Activity Title lets you pre-write creative titles and
-        effortlessly apply them to your Strava activities. Inspired by TweetDeck's scheduling features, this app helps
-        you inject personality into your training log.
+        I like to add creative titles to my Strava activities but creativity comes in bursts, so I created a website to
+        store activity names and update "Afternoon Run" to something else when I upload a run. This was a fun excuse
+        build a Django app, use ChatGPT, and use the Strava webhook.
     </p>
     <p>
-        This project was a fun opportunity to build a Django app, explore the Strava API and webhooks, and even leverage
-        the power of ChatGPT! While currently a personal project connected to my own Strava account, the goal is to
-        expand access in the future.
+        This project was a fun excuse to build a Django app, explore the Strava API, and testdrive ChatGPT and other
+        LLMs.
     </p>
 
-    <p>You can support me at <a
-            href="https://paypal.me/roryhr" target="_blank">paypal.me/roryhr</a></p>
 
 </section>
 
 <section class="about-details">
     <h2>How It Works</h2>
     <p>
-        Create and save your activity titles in advance. Then, when you upload a new activity to Strava, Activity Title
-        automatically updates it with your chosen title. No more boring default names!
+        Create an account or log back in by clicking the "Connect with Strava" button.
+        Create your activity titles on this site. Then, when you upload a new activity to Strava, Activity Title
+        automatically updates it with your chosen title. Deleting a title here doesn't affect your Strava. And, of
+        course, all your data stays on Strava.
     </p>
 
     <h2>Current Features</h2>
     <ul>
         <li>Create an account using Strava Connect on desktop and mobile</li>
         <li>Create and delete titles</li>
-        <li>Automatic Strava activity updates via webhooks</li>
+        <li>Syncing title to Strava</li>
         <li>See what's queued up</li>
     </ul>
 
-
     <h2>Future Plans</h2>
+    <p>
+        This is basically feature-complete. However, here are some features I'm considering:
+    </p>
+
     <ul>
-        <li>Integration with other fitness platforms (e.g., Garmin Connect).</li>
+        <li>Handling expired tokens and creating a logoff/login button</li>
         <li>Reordering your title list</li>
+        <li>Integrate with Garmin to sync that rare "Productive" training status</li>
     </ul>
 </section>
 
@@ -54,5 +57,7 @@ About Activity Title - Streamline Your Strava Activities
     </p>
     <p>Email: <a href="mailto:roryhr@gmail.com">roryhr@gmail.com</a></p>
     <p>I almost forgot, check me out on <a href="https://www.strava.com/athletes/23193264">Strava</a> too. Cheers!</p>
+    <p>You can support me at <a
+            href="https://paypal.me/roryhr" target="_blank">paypal.me/roryhr</a></p>
 </section>
 {% endblock %}

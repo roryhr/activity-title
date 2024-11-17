@@ -5,9 +5,6 @@
 
 {% block content %}
 <section class="titles">
-    <p>This was inspired by TweetDeck which enabled power users to schedule tweets back when Twitter didn't have
-        that feature.</p>
-
     <h1>Create New Title</h1>
     <form method="post">
         {% csrf_token %}
@@ -15,7 +12,7 @@
         <button>Create</button>
     </form>
     <h2>List of Titles</h2>
-    <p>This is demo data. Once logged in you'll be able to create your own that only you can see.</p>
+    <p>This is demo data. Create an account make your own list.</p>
     <ul>
         {% for title in titles %}
         <li>
