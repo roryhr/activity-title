@@ -1,8 +1,10 @@
 # Strava Deck? 
 
-This is a Django web app to help me rename my Strava activities.
+This is a Django web app that renames Strava activities.
 
-That's it!
+That's it! It's free so check it out at 
+
+https://activitytitle.com/
 
 ## Development Notes
 

@@ -13,7 +13,7 @@ Activity Title - Detail
 <p class="created-at">Linked to Strava on {{ title.used_at }}</p>
 {% endif %}
 
-<h2>Related Activities</h2>
+<h2>Linked Activity:</h2>
 <ul class="titles">
     {% for activity in title.activity_set.all %}
     <li>
@@ -24,7 +24,7 @@ Activity Title - Detail
         {% endif %}
     </li>
     {% empty %}
-    <p>Once this title is synced to Strava you'll see a link to the activity with this name.</p>
+    <p>Once this title is synced to Strava you'll see a link to the activity.</p>
     {% endfor %}
 </ul>
 
