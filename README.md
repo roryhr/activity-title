@@ -1,20 +1,25 @@
 # Strava Deck? 
 
 This is a Django web app that renames Strava activities.
+You create them here, they're saved to a database, and then they'll get applied one-by-one automatically within minutes once a Strava activity is created.
 
 That's it! It's free so check it out at 
 
 https://activitytitle.com/
 
-## Development Notes
+# Development
 
-Python 3.11
+I'm using Python 3.11 and Django.
 
 ```
-Python 3.11
-Django 5.0.7
-whitenoise  6.7.0
+conda create -n py311 python=3.11
+conda activate py311
+pip install -r requirements.txt 
+
+python manage.py runserver 
 ```
+
+Code formatting is handled by `black .` 
 
 Static files are handled by whitenoise. 
 
@@ -22,6 +27,8 @@ Static files are handled by whitenoise.
 Deployed to http://strava-deck.fly.dev/
 
 ## Tests
+
+Run the tests 
 
 ```
 python manage.py collectstatic
@@ -32,5 +39,5 @@ python manage.py test
 # TODOS
 
 1. User management panel where you can delete your account. Log out.
-2. Check what privedges were given in the OAuth flow
+2. Check what privileges were given in the OAuth flow
 3. Security 
