@@ -26,6 +26,10 @@ Static files are handled by whitenoise.
 
 Deployed to http://strava-deck.fly.dev/
 
+```
+fly deploy
+```
+
 ## Tests
 
 Run the tests 
