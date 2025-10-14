@@ -4,3 +4,4 @@ static
 *.pyc
 .env
 *.DS_STORE
+.vscode
